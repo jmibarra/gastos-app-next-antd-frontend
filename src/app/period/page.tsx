@@ -1,7 +1,8 @@
 // pages/ExamplePage.tsx
 "use client";
 import Sidebar from "@/components/Sidebar";
-import "./layout.css";
+import "../layout.css";
+// pages/ExamplePage.tsx
 import { Layout, Table, Card, Button } from "antd";
 import Sider from "antd/es/layout/Sider";
 import React, { useState } from "react";
@@ -11,7 +12,6 @@ const { Header, Content } = Layout;
 
 const PeriodLayout: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false);
-
     return (
         <Layout>
             <Sider
