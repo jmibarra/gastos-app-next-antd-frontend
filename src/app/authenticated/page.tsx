@@ -1,18 +1,16 @@
+"use client";
 import React from "react";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 
 const Authenticated = (props: any) => {
-  const { children } = props;
-  const cookieStore = cookies();
+    const { children } = props;
 
-  if (
-    cookieStore.get("PROD-APP-AUTH") === undefined ||
-    cookieStore.get("PROD-APP-AUTH")?.value === ""
-  ) {
-    redirect("/login");
-  }
-  return <>{children}</>;
+    const userData = JSON.parse(localStorage.getItem("user") as string);
+
+    if (!userData) {
+        redirect("/login");
+    }
+    return <>{children}</>;
 };
 
 export default Authenticated;
