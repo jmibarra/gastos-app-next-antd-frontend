@@ -1,6 +1,6 @@
 .header {
     padding-top: 12px;
-    background: #fff;
+    background: #fff !important;
 }
 
 .content{
@@ -38,5 +38,13 @@
 
 .ant-menu-item-selected{
     color: #1890ff !important;
-    
+}
+
+.header-icon{
+    background: hsl(231, 33%, 84%);
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 15px;
+    color: #1890ff;
+    cursor: pointer;
 }

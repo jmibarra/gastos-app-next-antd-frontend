@@ -8,11 +8,14 @@ import {
 } from "@ant-design/icons";
 import { Flex, Menu } from "antd";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
     const handleLogout = () => {
         localStorage.removeItem("user");
     };
+
+    const router = useRouter();
 
     return (
         <>
@@ -41,7 +44,6 @@ const Sidebar = () => {
                         key: 4,
                         icon: <UnlockOutlined />,
                         label: "Logout",
-                        onClick: handleLogout,
                     },
                 ]}
             />
