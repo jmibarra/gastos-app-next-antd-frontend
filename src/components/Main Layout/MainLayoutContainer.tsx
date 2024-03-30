@@ -2,7 +2,7 @@
 "use client";
 import Sidebar from "@/components/Sidebar";
 import "./styles/layout.css";
-import { Layout, Table, Card, Button, Flex } from "antd";
+import { Layout, Table, Card, Button, Flex, Typography } from "antd";
 import Sider from "antd/es/layout/Sider";
 import React, { Children, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
@@ -24,22 +24,21 @@ const MainLayoutContainer = (props: any) => {
                 collapsed={collapsed}
             >
                 <Sidebar />
-                <Button
-                    type="text"
-                    icon={
-                        collapsed ? (
-                            <MenuUnfoldOutlined />
-                        ) : (
-                            <MenuFoldOutlined />
-                        )
-                    }
-                    onClick={() => setCollapsed(!collapsed)}
-                    className="sider-trigger-button"
-                />
             </Sider>
             <Layout>
                 <Header className="header">
-                    <CustomHeader />
+                    <Button
+                        type="text"
+                        icon={
+                            collapsed ? (
+                                <MenuUnfoldOutlined />
+                            ) : (
+                                <MenuFoldOutlined />
+                            )
+                        }
+                        onClick={() => setCollapsed(!collapsed)}
+                        className="sider-trigger-button"
+                    />
                 </Header>
                 <Content className="content">{children}</Content>
             </Layout>
