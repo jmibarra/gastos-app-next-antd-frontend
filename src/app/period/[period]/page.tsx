@@ -1,13 +1,13 @@
 "use client";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
-import Authenticated from "../authenticated/page";
+import Authenticated from "../../authenticated/page";
 import { Card, Col, Divider, Row, Statistic } from "antd";
-import IncomeTable from "@/components/Ingresos/incomeTable";
 import ExpenseTable from "@/components/gastos/ExpensesTable";
-export default function Period() {
+import IncomeTable from "@/components/Ingresos/IncomeTable";
+export default function Period({ params }: { params: { period: string } }) {
     return (
         <Authenticated>
-            <h1>Period</h1>
+            <h1>Gastos {params.period}</h1>
             <Divider orientation="left">Datos del mes</Divider>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                 <Col className="gutter-row" span={6}>
