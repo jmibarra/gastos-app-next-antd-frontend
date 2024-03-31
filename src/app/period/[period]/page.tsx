@@ -67,7 +67,7 @@ export default function Period({ params }: { params: { period: string } }) {
             <Divider orientation="left">Gastos</Divider>
             <Row>
                 <Col span={24}>
-                    <ExpenseTable />
+                    <ExpenseTable data={expenses} />
                 </Col>
             </Row>
         </Authenticated>
