@@ -9,7 +9,10 @@ import {
 } from "@/app/period/[period]/models/expense.model";
 import { StatusIcons } from "../statusIcons";
 import { CategoryIcons } from "./categoryIcons";
-import { deleteExpenseById } from "@/app/period/[period]/services/expenses.service";
+import {
+    deleteExpenseById,
+    updateExpenseById,
+} from "@/app/period/[period]/services/expenses.service";
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -69,7 +72,10 @@ const EditableCell: React.FC<EditableCellProps> = ({
             const values = await form.validateFields();
 
             toggleEdit();
-            handleSave({ ...record, ...values });
+
+            const newValue = { ...record, ...values };
+            handleSave(newValue);
+            updateExpenseById(newValue._id, newValue);
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
         }
@@ -197,7 +203,7 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
 
     const handleSave = (row: IExpense) => {
         const newData = [...dataSource];
-        const index = newData.findIndex((item) => row.key === item._id);
+        const index = newData.findIndex((item) => row._id === item._id);
         const item = newData[index];
         newData.splice(index, 1, {
             ...item,

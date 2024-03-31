@@ -1,5 +1,5 @@
 export interface IExpense {
-    _id?: string;
+    _id: string;
     title: string;
     dueDate?: string;
     period: string;

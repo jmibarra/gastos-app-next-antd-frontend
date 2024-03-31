@@ -21,7 +21,6 @@ export const getExpensesByPeriod = async (period: string): Promise<IExpense[]> =
 export const deleteExpenseById = async (id: string) => {
     const url = `http://localhost:8080/expenses/${id}`;
 
-
     const response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -30,54 +29,21 @@ export const deleteExpenseById = async (id: string) => {
         },
     });
 }
+
+export const updateExpenseById = async (id: string, expense: IExpense) => {
+    const url = `http://localhost:8080/expenses/${id}`;
+
+    const response = await fetch(url, {
+        method: "PATCH",
+        body: JSON.stringify(expense),
+        headers: {
+            Authorization: `${userData?.token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}
 /*
 
-import axios from "axios";
-import { DataProvider, HttpError, useGetIdentity } from "@refinedev/core";
-import { stringify } from "query-string";
-
-// Error handling with axios interceptors
-const axiosInstance = axios.create();
-
-axiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    const customError: HttpError = {
-      ...error,
-      message: error.response?.data?.message,
-      statusCode: error.response?.status,
-    };
-
-    return Promise.reject(customError);
-  },
-);
-
-const userData = JSON.parse(localStorage.getItem("user") as string);
-
-export const expensesDataProvider = (apiUrl: string): DataProvider => ({
-    
-  
-    getList: async ({ resource }) => {
-        const url = `${apiUrl}/${resource}/all/122023`;
-    
-        const { data } = await axiosInstance.get(url,
-            {
-                headers: {
-                    Authorization: `${userData?.token}`
-                }
-            }
-        );
-    
-        const total = data.count;
-
-        const dataResponse = data.expenses;
-        return {
-            data: dataResponse,
-            total,
-        };
-      },
     create: async ({ resource, variables }) => {
         const url = `${apiUrl}/${resource}`;
     
@@ -85,33 +51,6 @@ export const expensesDataProvider = (apiUrl: string): DataProvider => ({
             headers: {
                 Authorization: `${userData.token}`
             }
-        });
-    
-        return {
-          data,
-        };
-      },
-    update: async ({ resource, id, variables }) => {
-        const url = `${apiUrl}/${resource}/${id}`;
-    
-        const { data } = await axiosInstance.patch(url, variables, {
-            headers: {
-                Authorization: `${userData.token}`
-            }
-        });
-    
-        return {
-          data,
-        };
-      },
-      deleteOne: async ({ resource, id, variables }) => {
-        const url = `${apiUrl}/${resource}/${id}`;
-    
-        const { data } = await axiosInstance.delete(url, {
-            headers: {
-                Authorization: `${userData.token}`
-            },
-            data: variables,
         });
     
         return {
@@ -133,9 +72,6 @@ export const expensesDataProvider = (apiUrl: string): DataProvider => ({
         };
       },
 
-      getApiUrl: () => {
-        return apiUrl;
-        },
 
 });
 
