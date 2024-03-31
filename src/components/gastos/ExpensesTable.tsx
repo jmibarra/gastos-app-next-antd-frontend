@@ -9,6 +9,7 @@ import {
 } from "@/app/period/[period]/models/expense.model";
 import { StatusIcons } from "../statusIcons";
 import { CategoryIcons } from "./categoryIcons";
+import { deleteExpenseById } from "@/app/period/[period]/services/expenses.service";
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -117,9 +118,10 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
 
     const [count, setCount] = useState(2);
 
-    const handleDelete = (key: React.Key) => {
+    const handleDelete = (key: string) => {
         const newData = dataSource.filter((item) => item._id !== key);
         setDataSource(newData);
+        deleteExpenseById(key);
     };
 
     const defaultColumns: (ColumnTypes[number] & {
@@ -170,11 +172,11 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
         {
             title: "operation",
             dataIndex: "operation",
-            render: (_, record: { key: React.Key }) =>
+            render: (_, record: IExpense) =>
                 dataSource.length >= 1 ? (
                     <Popconfirm
                         title="Sure to delete?"
-                        onConfirm={() => handleDelete(record.key)}
+                        onConfirm={() => handleDelete(record._id)}
                     >
                         <DeleteOutlined />
                     </Popconfirm>

@@ -17,6 +17,19 @@ export const getExpensesByPeriod = async (period: string): Promise<IExpense[]> =
     if (response.ok) return response.json().then((data) => data.expenses);
     else return [];
 };
+
+export const deleteExpenseById = async (id: string) => {
+    const url = `http://localhost:8080/expenses/${id}`;
+
+
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            Authorization: `${userData?.token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}
 /*
 
 import axios from "axios";
