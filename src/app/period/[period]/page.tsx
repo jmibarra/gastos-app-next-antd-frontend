@@ -7,6 +7,8 @@ import ExpenseTable from "@/components/gastos/ExpensesTable";
 import IncomeTable from "@/components/Ingresos/IncomeTable";
 import { IExpense } from "./models/expense.model";
 import { getExpensesByPeriod } from "./services/expenses.service";
+import { ExpenseStatisticCard } from "@/components/gastos/ExpenseStatisticCard";
+import { IncomeStatisticCard } from "@/components/Ingresos/IncomeStatisticCard";
 
 export default function Period({ params }: { params: { period: string } }) {
     const [expenses, setExpenses] = useState<IExpense[]>([]);
@@ -23,32 +25,13 @@ export default function Period({ params }: { params: { period: string } }) {
     return (
         <Authenticated>
             <h1>Gastos {params.period}</h1>
-            {console.log(expenses)}
             <Divider orientation="left">Datos del mes</Divider>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                 <Col className="gutter-row" span={6}>
-                    <Card bordered={false}>
-                        <Statistic
-                            title="Ingresos"
-                            value={11.28}
-                            precision={2}
-                            valueStyle={{ color: "#3f8600" }}
-                            prefix={<ArrowUpOutlined />}
-                            suffix="$"
-                        />
-                    </Card>
+                    <IncomeStatisticCard data={expenses} />
                 </Col>
                 <Col className="gutter-row" span={6}>
-                    <Card bordered={false}>
-                        <Statistic
-                            title="Gastos"
-                            value={9.3}
-                            precision={2}
-                            valueStyle={{ color: "#cf1322" }}
-                            prefix={<ArrowDownOutlined />}
-                            suffix="$"
-                        />
-                    </Card>
+                    <ExpenseStatisticCard data={expenses} />
                 </Col>
                 <Col className="gutter-row" span={6}>
                     <Card bordered={false}>
