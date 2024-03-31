@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
 import { Button, Form, Input, Popconfirm, Table } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -164,7 +165,7 @@ const IncomeTable: React.FC = () => {
                         title="Sure to delete?"
                         onConfirm={() => handleDelete(record.key)}
                     >
-                        <a>Delete</a>
+                        <DeleteOutlined />
                     </Popconfirm>
                 ) : null,
         },

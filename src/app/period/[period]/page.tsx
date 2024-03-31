@@ -1,13 +1,29 @@
 "use client";
+import { useEffect, useState } from "react";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import Authenticated from "../../authenticated/page";
 import { Card, Col, Divider, Row, Statistic } from "antd";
 import ExpenseTable from "@/components/gastos/ExpensesTable";
 import IncomeTable from "@/components/Ingresos/IncomeTable";
+import { IExpense } from "./models/expense.model";
+import { getExpensesByPeriod } from "./services/expenses.service";
+
 export default function Period({ params }: { params: { period: string } }) {
+    const [expenses, setExpenses] = useState<IExpense[]>([]);
+
+    useEffect(() => {
+        const fetchExpenses = async () => {
+            const fetchedExpenses = await getExpensesByPeriod(params.period);
+            setExpenses(fetchedExpenses);
+        };
+
+        fetchExpenses();
+    }, [params.period]);
+
     return (
         <Authenticated>
             <h1>Gastos {params.period}</h1>
+            {console.log(expenses)}
             <Divider orientation="left">Datos del mes</Divider>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                 <Col className="gutter-row" span={6}>
