@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
 import { Button, Form, Input, Popconfirm, Select, Table, Tag } from "antd";
-import { AuditOutlined, CarOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+    AuditOutlined,
+    CarOutlined,
+    DeleteOutlined,
+    PlusOutlined,
+} from "@ant-design/icons";
 import {
     Category,
     IExpense,
@@ -189,6 +194,7 @@ type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
 const ExpenseTable = (params: { data: IExpense[] }) => {
     const [dataSource, setDataSource] = useState<IExpense[]>([]);
+    const [createButtonLoading, setCreateButtonLoading] = useState(false);
 
     useEffect(() => {
         setDataSource(params.data);
@@ -264,6 +270,7 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
     ];
 
     const handleAdd = () => {
+        setCreateButtonLoading(true);
         const newData: IExpense = {
             _id: "1",
             title: `Nuevo Gasto`,
@@ -275,7 +282,10 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
         };
         const response = createExpense(newData);
 
-        response.then((data) => setDataSource([...dataSource, data]));
+        response.then((data) => {
+            setDataSource([...dataSource, data]);
+            setCreateButtonLoading(false);
+        });
     };
 
     const handleSave = (row: IExpense) => {
@@ -318,8 +328,10 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
                 onClick={handleAdd}
                 type="primary"
                 style={{ marginBottom: 16 }}
+                loading={createButtonLoading}
+                icon={<PlusOutlined />}
             >
-                Add a row
+                Crear un gasto
             </Button>
             <Table
                 components={components}
