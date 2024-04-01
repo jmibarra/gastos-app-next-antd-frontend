@@ -14,11 +14,8 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { StatusIcons } from "../status/statusIcons";
 import dayjs from "dayjs";
 import { IIncome, Status } from "@/app/period/[period]/models";
-import {
-    deleteExpenseById,
-    updateExpenseById,
-} from "@/app/period/[period]/services/expenses.service";
-import { createIncome } from "@/app/period/[period]/services";
+import { updateExpenseById } from "@/app/period/[period]/services/expenses.service";
+import { createIncome, deleteIncomeById } from "@/app/period/[period]/services";
 
 const { Option } = Select;
 
@@ -183,7 +180,7 @@ const IncomeTable = (params: { data: IIncome[]; period: string }) => {
     const handleDelete = (key: string) => {
         const newData = dataSource.filter((item) => item._id !== key);
         setDataSource(newData);
-        deleteExpenseById(key);
+        deleteIncomeById(key);
     };
 
     const defaultColumns: (ColumnTypes[number] & {

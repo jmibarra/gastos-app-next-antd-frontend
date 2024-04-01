@@ -1,5 +1,5 @@
 export interface IIncome {
-    _id?: string;
+    _id: string;
     title: string;
     date?: string;
     period: string;

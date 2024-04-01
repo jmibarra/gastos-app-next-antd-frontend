@@ -33,3 +33,15 @@ export const createIncome = async (income: IIncome) => {
     //Obtengo la respuesta del response y devuelvo el data
     return response.json().then((data) => data);
 }
+
+export const deleteIncomeById = async (id: string) => {
+    const url = `http://localhost:8080/incomes/${id}`;
+
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            Authorization: `${userData?.token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}
