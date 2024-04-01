@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
-import { Button, Form, Input, Popconfirm, Table, Tag } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Popconfirm, Select, Table, Tag } from "antd";
+import { AuditOutlined, CarOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
     Category,
     IExpense,
@@ -14,6 +14,9 @@ import {
     deleteExpenseById,
     updateExpenseById,
 } from "@/app/period/[period]/services/expenses.service";
+
+const { Option } = Select;
+
 import dayjs from "dayjs";
 
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -88,8 +91,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
     };
 
     let childNode = children;
-
-    if (editable) {
+    console.log(title);
+    if (editable && title !== "Estado" && title !== "Categoría") {
         childNode = editing ? (
             <Form.Item
                 style={{ margin: 0 }}
@@ -102,6 +105,70 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 ]}
             >
                 <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+            >
+                {children}
+            </div>
+        );
+    }
+
+    if (editable && title == "Estado") {
+        childNode = editing ? (
+            <Form.Item
+                name="status"
+                rules={[
+                    {
+                        required: true,
+                        message: "Por favor seleccione un estado.",
+                    },
+                ]}
+            >
+                {/* Deberia dinamizar esto trayendome las opciones desde la api */}
+                <Select ref={inputRef} onPressEnter={save} onBlur={save}>
+                    <Option value="65d0fb6db33cebd95694e233">Estimado</Option>
+                    <Option value="6553fe526562128ac0dd6f6e">Pendiente</Option>
+                    <Option value="65d0fb82b33cebd95694e234">
+                        Transferido
+                    </Option>
+                    <Option value="6553fd74df59e3f9af341a03">Pago</Option>
+                </Select>
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+            >
+                {children}
+            </div>
+        );
+    }
+
+    if (editable && title == "Categoría") {
+        childNode = editing ? (
+            <Form.Item
+                name="category"
+                rules={[
+                    {
+                        required: true,
+                        message: "Por favor seleccione una categoría.",
+                    },
+                ]}
+            >
+                {/* Deberia dinamizar esto trayendome las opciones desde la api */}
+                <Select ref={inputRef} onPressEnter={save} onBlur={save}>
+                    <Option value="6557d86ba3060170d82b6502">
+                        <CarOutlined /> Transporte
+                    </Option>
+                    <Option value="65d10927b33cebd95694e235">
+                        <AuditOutlined /> Impuestos
+                    </Option>
+                </Select>
             </Form.Item>
         ) : (
             <div
@@ -161,6 +228,7 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
                     {status?.name}
                 </Tag>
             ),
+            editable: true,
         },
         {
             title: "Monto",
@@ -179,6 +247,7 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
                     {category?.name}
                 </Tag>
             ),
+            editable: true,
         },
         {
             title: "operation",
