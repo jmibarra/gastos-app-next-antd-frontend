@@ -45,3 +45,16 @@ export const deleteIncomeById = async (id: string) => {
         },
     });
 }
+
+export const updateIncomeById = async (id: string, income: IIncome) => {
+    const url = `http://localhost:8080/incomes/${id}`;
+
+    const response = await fetch(url, {
+        method: "PATCH",
+        body: JSON.stringify(income),
+        headers: {
+            Authorization: `${userData?.token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}

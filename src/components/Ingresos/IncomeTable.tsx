@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
+import dayjs from "dayjs";
 import {
     Button,
     DatePicker,
@@ -12,10 +13,12 @@ import {
 } from "antd";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { StatusIcons } from "../status/statusIcons";
-import dayjs from "dayjs";
 import { IIncome, Status } from "@/app/period/[period]/models";
-import { updateExpenseById } from "@/app/period/[period]/services/expenses.service";
-import { createIncome, deleteIncomeById } from "@/app/period/[period]/services";
+import {
+    createIncome,
+    deleteIncomeById,
+    updateIncomeById,
+} from "@/app/period/[period]/services";
 
 const { Option } = Select;
 
@@ -82,7 +85,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
             const newValue = { ...record, ...values };
             handleSave(newValue);
-            updateExpenseById(newValue._id, newValue);
+            updateIncomeById(newValue._id, newValue);
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
         }
