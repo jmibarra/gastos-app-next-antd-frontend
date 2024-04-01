@@ -14,6 +14,9 @@ import {
     deleteExpenseById,
     updateExpenseById,
 } from "@/app/period/[period]/services/expenses.service";
+import dayjs from "dayjs";
+
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -23,6 +26,8 @@ const EditableContext = React.createContext<FormInstance<any> | null>(null);
 interface EditableRowProps {
     index: number;
 }
+
+const dateFormat = "DD/MM/YYYY";
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
     const [form] = Form.useForm();
@@ -143,6 +148,7 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
             title: "Fecha de vencimiento",
             dataIndex: "dueDate",
             editable: true,
+            render: (value) => dayjs(value).format(dateFormat),
         },
         {
             title: "Estado",
