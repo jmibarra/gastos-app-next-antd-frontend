@@ -1,6 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
-import { Button, Form, Input, Popconfirm, Select, Table, Tag } from "antd";
+import {
+    Button,
+    DatePicker,
+    Form,
+    Input,
+    Popconfirm,
+    Select,
+    Table,
+    Tag,
+} from "antd";
 import {
     AuditOutlined,
     CarOutlined,
@@ -12,7 +21,7 @@ import {
     IExpense,
     Status,
 } from "@/app/period/[period]/models/expense.model";
-import { StatusIcons } from "../statusIcons";
+import { StatusIcons } from "../status/statusIcons";
 import { CategoryIcons } from "./categoryIcons";
 import {
     createExpense,
@@ -96,7 +105,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
     };
 
     let childNode = children;
-    if (editable && title !== "Estado" && title !== "Categoría") {
+    if (
+        editable &&
+        title !== "Estado" &&
+        title !== "Categoría" &&
+        title !== "Fecha de vencimiento"
+    ) {
         childNode = editing ? (
             <Form.Item
                 style={{ margin: 0 }}
@@ -185,6 +199,22 @@ const EditableCell: React.FC<EditableCellProps> = ({
         );
     }
 
+    if (editable && title == "Fecha de vencimiento") {
+        childNode = editing ? (
+            <Form.Item name="dueDate">
+                <DatePicker ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+            >
+                {children}
+            </div>
+        );
+    }
+
     return <td {...restProps}>{childNode}</td>;
 };
 
@@ -192,7 +222,7 @@ type EditableTableProps = Parameters<typeof Table>[0];
 
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
-const ExpenseTable = (params: { data: IExpense[] }) => {
+const ExpenseTable = (params: { data: IExpense[]; period: string }) => {
     const [dataSource, setDataSource] = useState<IExpense[]>([]);
     const [createButtonLoading, setCreateButtonLoading] = useState(false);
 
@@ -277,7 +307,7 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
             dueDate: "2024-02-20T20:19:40.723Z",
             status: "6553fe526562128ac0dd6f6e",
             amount: 1,
-            period: params.data[0].period, //Paso el periodo o alcanza con copiar a sus hermanos?
+            period: params.period, //Paso el periodo o alcanza con copiar a sus hermanos?
             category: "6557d86ba3060170d82b6502",
         };
         const response = createExpense(newData);

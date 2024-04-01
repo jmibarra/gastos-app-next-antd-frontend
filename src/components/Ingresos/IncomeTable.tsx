@@ -1,23 +1,37 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
-import { Button, Form, Input, Popconfirm, Table } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import {
+    Button,
+    DatePicker,
+    Form,
+    Input,
+    Popconfirm,
+    Select,
+    Table,
+    Tag,
+} from "antd";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { StatusIcons } from "../status/statusIcons";
+import dayjs from "dayjs";
+import { IIncome, Status } from "@/app/period/[period]/models";
+import {
+    deleteExpenseById,
+    updateExpenseById,
+} from "@/app/period/[period]/services/expenses.service";
+import { createIncome } from "@/app/period/[period]/services";
+
+const { Option } = Select;
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
-interface Item {
-    key: string;
-    name: string;
-    age: string;
-    address: string;
-}
-
 interface EditableRowProps {
     index: number;
 }
+
+const dateFormat = "DD/MM/YYYY";
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
     const [form] = Form.useForm();
@@ -34,9 +48,9 @@ interface EditableCellProps {
     title: React.ReactNode;
     editable: boolean;
     children: React.ReactNode;
-    dataIndex: keyof Item;
-    record: Item;
-    handleSave: (record: Item) => void;
+    dataIndex: keyof IIncome;
+    record: IIncome;
+    handleSave: (record: IIncome) => void;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -68,15 +82,17 @@ const EditableCell: React.FC<EditableCellProps> = ({
             const values = await form.validateFields();
 
             toggleEdit();
-            handleSave({ ...record, ...values });
+
+            const newValue = { ...record, ...values };
+            handleSave(newValue);
+            updateExpenseById(newValue._id, newValue);
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
         }
     };
 
     let childNode = children;
-
-    if (editable) {
+    if (editable && title !== "Estado" && title !== "Fecha de vencimiento") {
         childNode = editing ? (
             <Form.Item
                 style={{ margin: 0 }}
@@ -101,41 +117,73 @@ const EditableCell: React.FC<EditableCellProps> = ({
         );
     }
 
+    if (editable && title == "Estado") {
+        childNode = editing ? (
+            <Form.Item
+                name="status"
+                rules={[
+                    {
+                        required: true,
+                        message: "Por favor seleccione un estado.",
+                    },
+                ]}
+            >
+                {/* Deberia dinamizar esto trayendome las opciones desde la api */}
+                <Select ref={inputRef} onPressEnter={save} onBlur={save}>
+                    <Option value="65d0fb6db33cebd95694e233">Estimado</Option>
+                    <Option value="6553fe526562128ac0dd6f6e">Pendiente</Option>
+                    <Option value="65d0fb82b33cebd95694e234">
+                        Transferido
+                    </Option>
+                    <Option value="6553fd74df59e3f9af341a03">Pago</Option>
+                </Select>
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+            >
+                {children}
+            </div>
+        );
+    }
+
+    if (editable && title == "Fecha de ingreso") {
+        childNode = editing ? (
+            <Form.Item name="date">
+                <DatePicker ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+            >
+                {children}
+            </div>
+        );
+    }
+
     return <td {...restProps}>{childNode}</td>;
 };
 
 type EditableTableProps = Parameters<typeof Table>[0];
 
-interface DataType {
-    key: React.Key;
-    name: string;
-    age: string;
-    address: string;
-}
-
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
-const IncomeTable: React.FC = () => {
-    const [dataSource, setDataSource] = useState<DataType[]>([
-        {
-            key: "0",
-            name: "Edward King 0",
-            age: "32",
-            address: "London, Park Lane no. 0",
-        },
-        {
-            key: "1",
-            name: "Edward King 1",
-            age: "32",
-            address: "London, Park Lane no. 1",
-        },
-    ]);
+const IncomeTable = (params: { data: IIncome[]; period: string }) => {
+    const [dataSource, setDataSource] = useState<IIncome[]>([]);
+    const [createButtonLoading, setCreateButtonLoading] = useState(false);
 
-    const [count, setCount] = useState(2);
+    useEffect(() => {
+        setDataSource(params.data);
+    }, [params.data]);
 
-    const handleDelete = (key: React.Key) => {
-        const newData = dataSource.filter((item) => item.key !== key);
+    const handleDelete = (key: string) => {
+        const newData = dataSource.filter((item) => item._id !== key);
         setDataSource(newData);
+        deleteExpenseById(key);
     };
 
     const defaultColumns: (ColumnTypes[number] & {
@@ -143,27 +191,44 @@ const IncomeTable: React.FC = () => {
         dataIndex: string;
     })[] = [
         {
-            title: "name",
-            dataIndex: "name",
+            title: "Título",
+            dataIndex: "title",
             width: "30%",
             editable: true,
         },
         {
-            title: "age",
-            dataIndex: "age",
+            title: "Fecha de ingreso",
+            dataIndex: "date",
+            editable: true,
+            render: (value) => dayjs(value).format(dateFormat),
         },
         {
-            title: "address",
-            dataIndex: "address",
+            title: "Estado",
+            dataIndex: "status",
+            render: (status: Status) => (
+                <Tag
+                    icon={<StatusIcons status={status?.name} />}
+                    color={status?.color}
+                >
+                    {status?.name}
+                </Tag>
+            ),
+            editable: true,
+        },
+        {
+            title: "Monto",
+            dataIndex: "amount",
+            render: (value) => <>$ {value}</>,
+            editable: true,
         },
         {
             title: "operation",
             dataIndex: "operation",
-            render: (_, record: { key: React.Key }) =>
+            render: (_, record: IIncome) =>
                 dataSource.length >= 1 ? (
                     <Popconfirm
                         title="Sure to delete?"
-                        onConfirm={() => handleDelete(record.key)}
+                        onConfirm={() => handleDelete(record._id)}
                     >
                         <DeleteOutlined />
                     </Popconfirm>
@@ -172,19 +237,27 @@ const IncomeTable: React.FC = () => {
     ];
 
     const handleAdd = () => {
-        const newData: DataType = {
-            key: count,
-            name: `Edward King ${count}`,
-            age: "32",
-            address: `London, Park Lane no. ${count}`,
+        setCreateButtonLoading(true);
+        const newData: IIncome = {
+            _id: "1",
+            title: `Nuevo Ingreso`,
+            date: "2024-02-20T20:19:40.723Z",
+            status: "6553fe526562128ac0dd6f6e",
+            amount: 1,
+            period: params.period, //Paso el periodo o alcanza con copiar a sus hermanos?
         };
-        setDataSource([...dataSource, newData]);
-        setCount(count + 1);
+
+        const response = createIncome(newData);
+
+        response.then((data) => {
+            setDataSource([...dataSource, data]);
+            setCreateButtonLoading(false);
+        });
     };
 
-    const handleSave = (row: DataType) => {
+    const handleSave = (row: IIncome) => {
         const newData = [...dataSource];
-        const index = newData.findIndex((item) => row.key === item.key);
+        const index = newData.findIndex((item) => row._id === item._id);
         const item = newData[index];
         newData.splice(index, 1, {
             ...item,
@@ -206,7 +279,7 @@ const IncomeTable: React.FC = () => {
         }
         return {
             ...col,
-            onCell: (record: DataType) => ({
+            onCell: (record: IIncome) => ({
                 record,
                 editable: col.editable,
                 dataIndex: col.dataIndex,
@@ -222,8 +295,10 @@ const IncomeTable: React.FC = () => {
                 onClick={handleAdd}
                 type="primary"
                 style={{ marginBottom: 16 }}
+                loading={createButtonLoading}
+                icon={<PlusOutlined />}
             >
-                Add a row
+                Crear un ingreso
             </Button>
             <Table
                 components={components}

@@ -6,8 +6,14 @@ import React from "react";
 
 export const IncomeStatisticCard = (params: { data: IIncome[] }) => {
     const { data } = params;
+
+    console.log(data);
     //Contemplar que amount puede ser null
-    const totalAmount = data.reduce((acc, curr) => acc + curr.amount, 0);
+    const filteredData = data.filter((item) => item.amount !== null);
+    const totalAmount = filteredData.reduce(
+        (acc, curr) => acc + curr.amount,
+        0
+    );
     return (
         <Card bordered={false}>
             <Statistic

@@ -6,29 +6,40 @@ import { Card, Col, Divider, Row, Statistic } from "antd";
 import ExpenseTable from "@/components/gastos/ExpensesTable";
 import IncomeTable from "@/components/Ingresos/IncomeTable";
 import { IExpense } from "./models/expense.model";
-import { getExpensesByPeriod } from "./services/expenses.service";
 import { ExpenseStatisticCard } from "@/components/gastos/ExpenseStatisticCard";
 import { IncomeStatisticCard } from "@/components/Ingresos/IncomeStatisticCard";
+import { IIncome } from "./models/income.model";
+import { getExpensesByPeriod, getIncomesByPeriod } from "./services";
 
 export default function Period({ params }: { params: { period: string } }) {
+    const [period, setPeriod] = useState(params.period);
     const [expenses, setExpenses] = useState<IExpense[]>([]);
+    const [incomes, setIncomes] = useState<IIncome[]>([]);
 
     useEffect(() => {
         const fetchExpenses = async () => {
-            const fetchedExpenses = await getExpensesByPeriod(params.period);
+            const fetchedExpenses = await getExpensesByPeriod(period);
             setExpenses(fetchedExpenses);
         };
-
         fetchExpenses();
-    }, [params.period]);
+    }, [period]);
+
+    useEffect(() => {
+        const fetchIncomes = async () => {
+            const fetchedIncomes = await getIncomesByPeriod(period);
+            setIncomes(fetchedIncomes);
+        };
+
+        fetchIncomes();
+    }, [period]);
 
     return (
         <Authenticated>
-            <h1>Gastos {params.period}</h1>
+            <h1>Gastos {period}</h1>
             <Divider orientation="left">Datos del mes</Divider>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                 <Col className="gutter-row" span={6}>
-                    <IncomeStatisticCard data={expenses} />
+                    <IncomeStatisticCard data={incomes} />
                 </Col>
                 <Col className="gutter-row" span={6}>
                     <ExpenseStatisticCard data={expenses} />
@@ -61,13 +72,13 @@ export default function Period({ params }: { params: { period: string } }) {
             <Divider orientation="left">Ingresos</Divider>
             <Row>
                 <Col span={24}>
-                    <IncomeTable />
+                    <IncomeTable data={incomes} period={period} />
                 </Col>
             </Row>
             <Divider orientation="left">Gastos</Divider>
             <Row>
                 <Col span={24}>
-                    <ExpenseTable data={expenses} />
+                    <ExpenseTable data={expenses} period={period} />
                 </Col>
             </Row>
         </Authenticated>

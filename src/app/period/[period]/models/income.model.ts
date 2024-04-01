@@ -3,7 +3,7 @@ export interface IIncome {
     title: string;
     date?: string;
     period: string;
-    status: Status;
+    status: Status | string;
     amount?: number;
     type?: string;
     owner?: string;
