@@ -91,7 +91,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     };
 
     let childNode = children;
-    console.log(title);
     if (editable && title !== "Estado" && title !== "Categoría") {
         childNode = editing ? (
             <Form.Item
