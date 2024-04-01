@@ -10,6 +10,7 @@ import {
 import { StatusIcons } from "../statusIcons";
 import { CategoryIcons } from "./categoryIcons";
 import {
+    createExpense,
     deleteExpenseById,
     updateExpenseById,
 } from "@/app/period/[period]/services/expenses.service";
@@ -122,8 +123,6 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
         setDataSource(params.data);
     }, [params.data]);
 
-    const [count, setCount] = useState(2);
-
     const handleDelete = (key: string) => {
         const newData = dataSource.filter((item) => item._id !== key);
         setDataSource(newData);
@@ -192,13 +191,17 @@ const ExpenseTable = (params: { data: IExpense[] }) => {
 
     const handleAdd = () => {
         const newData: IExpense = {
-            key: count,
-            name: `Edward King ${count}`,
-            age: "32",
-            address: `London, Park Lane no. ${count}`,
+            _id: "1",
+            title: `Nuevo Gasto`,
+            dueDate: "2024-02-20T20:19:40.723Z",
+            status: "6553fe526562128ac0dd6f6e",
+            amount: 1,
+            period: params.data[0].period, //Paso el periodo o alcanza con copiar a sus hermanos?
+            category: "6557d86ba3060170d82b6502",
         };
-        setDataSource([...dataSource, newData]);
-        setCount(count + 1);
+        const response = createExpense(newData);
+
+        response.then((data) => setDataSource([...dataSource, data]));
     };
 
     const handleSave = (row: IExpense) => {

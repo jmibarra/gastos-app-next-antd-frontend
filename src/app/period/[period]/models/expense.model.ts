@@ -3,8 +3,20 @@ export interface IExpense {
     title: string;
     dueDate?: string;
     period: string;
-    status: Status;
-    category?: Category;
+    status: Status | string;
+    category?: Category | string;
+    amount?: number;
+    type?: string;
+    owner?: string;
+}
+
+export interface IExpensePlain {
+    _id: string;
+    title: string;
+    dueDate?: string;
+    period: string;
+    status: string;
+    category?: string;
     amount?: number;
     type?: string;
     owner?: string;

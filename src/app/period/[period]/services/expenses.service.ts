@@ -42,6 +42,22 @@ export const updateExpenseById = async (id: string, expense: IExpense) => {
         },
     });
 }
+
+export const createExpense = async (expense: IExpense) => {
+    const url = "http://localhost:8080/expenses";
+
+    const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(expense),
+        headers: {
+            Authorization: `${userData?.token}`,
+            "Content-Type": "application/json",
+        },
+    })
+
+    //Obtengo la respuesta del response y devuelvo el data
+    return response.json().then((data) => data);
+}
 /*
 
     create: async ({ resource, variables }) => {
