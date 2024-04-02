@@ -21,7 +21,7 @@ import {
     IExpense,
     Status,
 } from "@/app/period/[period]/models/expense.model";
-import { StatusIcons } from "../status/statusIcons";
+import { StatusIcons } from "../../status/statusIcons";
 import { CategoryIcons } from "./categoryIcons";
 import {
     createExpense,
@@ -150,7 +150,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 ]}
             >
                 {/* Deberia dinamizar esto trayendome las opciones desde la api */}
-                <Select ref={inputRef} onPressEnter={save} onBlur={save}>
+                <Select def={inputRef} onPressEnter={save} onBlur={save}>
                     <Option value="65d0fb6db33cebd95694e233">Estimado</Option>
                     <Option value="6553fe526562128ac0dd6f6e">Pendiente</Option>
                     <Option value="65d0fb82b33cebd95694e234">

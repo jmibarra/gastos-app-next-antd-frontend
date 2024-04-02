@@ -12,7 +12,7 @@ import {
     Tag,
 } from "antd";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { StatusIcons } from "../status/statusIcons";
+import { StatusIcons } from "../../status/statusIcons";
 import { IIncome, Status } from "@/app/period/[period]/models";
 import {
     createIncome,
