@@ -57,4 +57,6 @@ export const updateIncomeById = async (id: string, income: IIncome) => {
             "Content-Type": "application/json",
         },
     });
+
+    return response.json().then((data) => data);
 }
