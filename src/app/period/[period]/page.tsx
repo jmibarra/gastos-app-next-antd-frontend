@@ -67,7 +67,11 @@ export default function Period({ params }: { params: { period: string } }) {
             <Divider orientation="left">Ingresos</Divider>
             <Row>
                 <Col span={24}>
-                    <IncomeTable data={incomes} period={period} />
+                    <IncomeTable
+                        incomes={incomes}
+                        updateIncomes={setIncomes}
+                        period={period}
+                    />
                 </Col>
             </Row>
             <Divider orientation="left">Gastos</Divider>

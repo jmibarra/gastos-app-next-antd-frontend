@@ -11,12 +11,14 @@ export const MonthResultStatisticCard = (params: {
     const { incomes, expenses } = params;
 
     const filteredIncomesData = incomes.filter((item) => item.amount !== null);
+
+    const totalIncomesAmount = filteredIncomesData.reduce(
+        (acc, curr) => (acc + curr.amount) as number,
+        0
+    );
+
     const filteredExpensesData = expenses.filter(
         (item) => item.amount !== null
-    );
-    const totalIncomesAmount = filteredIncomesData.reduce(
-        (acc, curr) => acc + curr.amount,
-        0
     );
 
     const totalExpensesAmount = filteredExpensesData.reduce(
@@ -25,9 +27,6 @@ export const MonthResultStatisticCard = (params: {
     );
 
     const totalAmount = totalIncomesAmount - totalExpensesAmount;
-
-    if (totalAmount < 0) {
-    }
 
     return (
         <Card bordered={false}>

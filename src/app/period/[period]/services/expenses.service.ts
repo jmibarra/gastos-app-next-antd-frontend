@@ -33,6 +33,8 @@ export const deleteExpenseById = async (id: string) => {
 export const updateExpenseById = async (id: string, expense: IExpense) => {
     const url = `http://localhost:8080/expenses/${id}`;
 
+    console.log(expense)
+
     const response = await fetch(url, {
         method: "PATCH",
         body: JSON.stringify(expense),

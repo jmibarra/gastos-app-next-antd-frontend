@@ -172,17 +172,17 @@ type EditableTableProps = Parameters<typeof Table>[0];
 
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
-const IncomeTable = (params: { data: IIncome[]; period: string }) => {
-    const [dataSource, setDataSource] = useState<IIncome[]>([]);
+const IncomeTable = (params: {
+    incomes: IIncome[];
+    updateIncomes: any;
+    period: string;
+}) => {
     const [createButtonLoading, setCreateButtonLoading] = useState(false);
-
-    useEffect(() => {
-        setDataSource(params.data);
-    }, [params.data]);
+    const { incomes, updateIncomes } = params;
 
     const handleDelete = (key: string) => {
-        const newData = dataSource.filter((item) => item._id !== key);
-        setDataSource(newData);
+        const newData = incomes.filter((item) => item._id !== key);
+        updateIncomes(newData);
         deleteIncomeById(key);
     };
 
@@ -225,7 +225,7 @@ const IncomeTable = (params: { data: IIncome[]; period: string }) => {
             title: "operation",
             dataIndex: "operation",
             render: (_, record: IIncome) =>
-                dataSource.length >= 1 ? (
+                incomes.length >= 1 ? (
                     <Popconfirm
                         title="Sure to delete?"
                         onConfirm={() => handleDelete(record._id)}
@@ -244,26 +244,26 @@ const IncomeTable = (params: { data: IIncome[]; period: string }) => {
             date: "2024-02-20T20:19:40.723Z",
             status: "6553fe526562128ac0dd6f6e",
             amount: 1,
-            period: params.period, //Paso el periodo o alcanza con copiar a sus hermanos?
+            period: params.period,
         };
 
         const response = createIncome(newData);
 
         response.then((data) => {
-            setDataSource([...dataSource, data]);
+            updateIncomes([...incomes, data]);
             setCreateButtonLoading(false);
         });
     };
 
     const handleSave = (row: IIncome) => {
-        const newData = [...dataSource];
+        const newData = [...incomes];
         const index = newData.findIndex((item) => row._id === item._id);
         const item = newData[index];
         newData.splice(index, 1, {
             ...item,
             ...row,
         });
-        setDataSource(newData);
+        updateIncomes(newData);
     };
 
     const components = {
@@ -304,7 +304,7 @@ const IncomeTable = (params: { data: IIncome[]; period: string }) => {
                 components={components}
                 rowClassName={() => "editable-row"}
                 bordered
-                dataSource={dataSource}
+                dataSource={incomes}
                 columns={columns as ColumnTypes}
             />
         </div>
