@@ -41,6 +41,8 @@ export const updateExpenseById = async (id: string, expense: IExpense) => {
             "Content-Type": "application/json",
         },
     });
+
+    return response.json().then((data) => data);
 }
 
 export const createExpense = async (expense: IExpense) => {
@@ -58,37 +60,3 @@ export const createExpense = async (expense: IExpense) => {
     //Obtengo la respuesta del response y devuelvo el data
     return response.json().then((data) => data);
 }
-/*
-
-    create: async ({ resource, variables }) => {
-        const url = `${apiUrl}/${resource}`;
-    
-        const { data } = await axiosInstance.post(url, variables,{
-            headers: {
-                Authorization: `${userData.token}`
-            }
-        });
-    
-        return {
-          data,
-        };
-      },
-
-      getOne: async ({ resource, id }) => {
-        const url = `${apiUrl}/${resource}/${id}`;
-    
-        const { data } = await axiosInstance.get(url, {
-            headers: {
-                Authorization: `${userData.token}`
-            }
-            });
-    
-        return {
-          data,
-        };
-      },
-
-
-});
-
-*/

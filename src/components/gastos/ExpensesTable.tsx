@@ -97,8 +97,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
             toggleEdit();
 
             const newValue = { ...record, ...values };
-            handleSave(newValue);
-            updateExpenseById(newValue._id, newValue);
+
+            const response = updateExpenseById(newValue._id, newValue);
+            response.then((updatedRecord) => {
+                handleSave(updatedRecord);
+            });
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
         }

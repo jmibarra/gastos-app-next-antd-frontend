@@ -7,7 +7,6 @@ import React from "react";
 export const IncomeStatisticCard = (params: { data: IIncome[] }) => {
     const { data } = params;
 
-    console.log(data);
     //Contemplar que amount puede ser null
     const filteredData = data.filter((item) => item.amount !== null);
     const totalAmount = filteredData.reduce(
