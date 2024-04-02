@@ -14,6 +14,7 @@ import {
     AuditOutlined,
     CarOutlined,
     DeleteOutlined,
+    DeleteTwoTone,
     PlusOutlined,
 } from "@ant-design/icons";
 import {
@@ -150,7 +151,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 ]}
             >
                 {/* Deberia dinamizar esto trayendome las opciones desde la api */}
-                <Select def={inputRef} onPressEnter={save} onBlur={save}>
+                <Select ref={inputRef} onPressEnter={save} onBlur={save}>
                     <Option value="65d0fb6db33cebd95694e233">Estimado</Option>
                     <Option value="6553fe526562128ac0dd6f6e">Pendiente</Option>
                     <Option value="65d0fb82b33cebd95694e234">
@@ -289,7 +290,7 @@ const ExpenseTable = (params: {
             editable: true,
         },
         {
-            title: "operation",
+            title: "",
             dataIndex: "operation",
             render: (_, record: IExpense) =>
                 expenses.length >= 1 ? (
@@ -297,7 +298,7 @@ const ExpenseTable = (params: {
                         title="Sure to delete?"
                         onConfirm={() => handleDelete(record._id)}
                     >
-                        <DeleteOutlined />
+                        <DeleteTwoTone twoToneColor="red" />
                     </Popconfirm>
                 ) : null,
         },

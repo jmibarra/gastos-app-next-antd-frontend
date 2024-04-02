@@ -11,7 +11,7 @@ import {
     Table,
     Tag,
 } from "antd";
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
 import { StatusIcons } from "../../status/statusIcons";
 import { IIncome, Status } from "@/app/period/[period]/models";
 import {
@@ -226,7 +226,7 @@ const IncomeTable = (params: {
             editable: true,
         },
         {
-            title: "operation",
+            title: "",
             dataIndex: "operation",
             render: (_, record: IIncome) =>
                 incomes.length >= 1 ? (
@@ -234,7 +234,7 @@ const IncomeTable = (params: {
                         title="Sure to delete?"
                         onConfirm={() => handleDelete(record._id)}
                     >
-                        <DeleteOutlined />
+                        <DeleteTwoTone twoToneColor="red" />
                     </Popconfirm>
                 ) : null,
         },

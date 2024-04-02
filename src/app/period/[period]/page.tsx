@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import Authenticated from "../../authenticated/page";
-import { Card, Col, Divider, Row, Statistic } from "antd";
+import { Card, Col, DatePicker, Divider, Row, Statistic } from "antd";
 import ExpenseTable from "@/components/periodos/gastos/ExpensesTable";
 import IncomeTable from "@/components/periodos/Ingresos/IncomeTable";
 import { IExpense } from "./models/expense.model";
@@ -34,34 +34,32 @@ export default function Period({ params }: { params: { period: string } }) {
         fetchIncomes();
     }, [period]);
 
+    const handlePeriodChange = (date: any, dateString: string) => {
+        setPeriod(dateString);
+    };
+
     return (
         <Authenticated>
-            <h1>Gastos {period}</h1>
+            <h1>Gastos {period} </h1>
+            <Divider orientation="left">Periodo</Divider>
+            <DatePicker
+                onChange={handlePeriodChange}
+                picker="month"
+                format={"MMYYYY"}
+            />
             <Divider orientation="left">Datos del mes</Divider>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                <Col className="gutter-row" span={6}>
+                <Col className="gutter-row" span={8}>
                     <IncomeStatisticCard data={incomes} />
                 </Col>
-                <Col className="gutter-row" span={6}>
+                <Col className="gutter-row" span={8}>
                     <ExpenseStatisticCard data={expenses} />
                 </Col>
-                <Col className="gutter-row" span={6}>
+                <Col className="gutter-row" span={8}>
                     <MonthResultStatisticCard
                         incomes={incomes}
                         expenses={expenses}
                     />
-                </Col>
-                <Col className="gutter-row" span={6}>
-                    <Card bordered={false}>
-                        <Statistic
-                            title="Ahorros del mes"
-                            value={9.3}
-                            precision={2}
-                            valueStyle={{ color: "#cf1322" }}
-                            prefix={<ArrowDownOutlined />}
-                            suffix="$"
-                        />
-                    </Card>
                 </Col>
             </Row>
             <Divider orientation="left">Ingresos</Divider>
