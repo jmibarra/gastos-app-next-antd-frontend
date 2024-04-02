@@ -225,17 +225,18 @@ type EditableTableProps = Parameters<typeof Table>[0];
 
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
-const ExpenseTable = (params: { data: IExpense[]; period: string }) => {
-    const [dataSource, setDataSource] = useState<IExpense[]>([]);
+const ExpenseTable = (params: {
+    expenses: IExpense[];
+    updateExpenses: any;
+    period: string;
+}) => {
     const [createButtonLoading, setCreateButtonLoading] = useState(false);
 
-    useEffect(() => {
-        setDataSource(params.data);
-    }, [params.data]);
+    const { expenses, updateExpenses } = params;
 
     const handleDelete = (key: string) => {
-        const newData = dataSource.filter((item) => item._id !== key);
-        setDataSource(newData);
+        const newData = expenses.filter((item) => item._id !== key);
+        updateExpenses(newData);
         deleteExpenseById(key);
     };
 
@@ -291,7 +292,7 @@ const ExpenseTable = (params: { data: IExpense[]; period: string }) => {
             title: "operation",
             dataIndex: "operation",
             render: (_, record: IExpense) =>
-                dataSource.length >= 1 ? (
+                expenses.length >= 1 ? (
                     <Popconfirm
                         title="Sure to delete?"
                         onConfirm={() => handleDelete(record._id)}
@@ -316,20 +317,20 @@ const ExpenseTable = (params: { data: IExpense[]; period: string }) => {
         const response = createExpense(newData);
 
         response.then((data) => {
-            setDataSource([...dataSource, data]);
+            updateExpenses([...expenses, data]);
             setCreateButtonLoading(false);
         });
     };
 
     const handleSave = (row: IExpense) => {
-        const newData = [...dataSource];
+        const newData = [...expenses];
         const index = newData.findIndex((item) => row._id === item._id);
         const item = newData[index];
         newData.splice(index, 1, {
             ...item,
             ...row,
         });
-        setDataSource(newData);
+        updateExpenses(newData);
     };
 
     const components = {
@@ -370,7 +371,7 @@ const ExpenseTable = (params: { data: IExpense[]; period: string }) => {
                 components={components}
                 rowClassName={() => "editable-row"}
                 bordered
-                dataSource={dataSource}
+                dataSource={expenses}
                 columns={columns as ColumnTypes}
             />
         </div>
