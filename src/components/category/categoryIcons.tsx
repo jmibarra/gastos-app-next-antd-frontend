@@ -28,5 +28,6 @@ export const CategoryIcons: React.FC<{ category: string | undefined }> = ({
     if (!category) {
         return null;
     }
+
     return categoryIcons[category] || null;
 };
