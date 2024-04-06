@@ -13,15 +13,10 @@ import {
 import {
     AuditOutlined,
     CarOutlined,
-    DeleteOutlined,
     DeleteTwoTone,
     PlusOutlined,
 } from "@ant-design/icons";
-import {
-    Category,
-    IExpense,
-    Status,
-} from "@/app/period/[period]/models/expense.model";
+import { IExpense, Status } from "@/app/period/[period]/models/expense.model";
 import { StatusIcons } from "../../status/statusIcons";
 import { CategoryIcons } from "../../category/categoryIcons";
 import {
@@ -35,6 +30,7 @@ const { Option } = Select;
 import dayjs from "dayjs";
 
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { ICategory } from "@/app/category/models";
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -279,7 +275,7 @@ const ExpenseTable = (params: {
         {
             title: "Categoría",
             dataIndex: "category",
-            render: (category: Category) => (
+            render: (category: ICategory) => (
                 <Tag
                     icon={<CategoryIcons category={category?.name} />}
                     color={category?.color}

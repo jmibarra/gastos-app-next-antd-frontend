@@ -1,26 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
-import dayjs from "dayjs";
-import {
-    Button,
-    DatePicker,
-    Form,
-    Input,
-    Popconfirm,
-    Select,
-    Table,
-    Tag,
-} from "antd";
+import { Button, Form, Input, Popconfirm, Table } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
-import { IIncome, Status } from "@/app/period/[period]/models";
+
 import {
     createIncome,
     deleteIncomeById,
     updateIncomeById,
 } from "@/app/period/[period]/services";
 import { ICategory } from "@/app/category/models";
-
-const { Option } = Select;
+import { createCategory } from "@/app/category/services";
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -30,8 +19,6 @@ const EditableContext = React.createContext<FormInstance<any> | null>(null);
 interface EditableRowProps {
     index: number;
 }
-
-const dateFormat = "DD/MM/YYYY";
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
     const [form] = Form.useForm();
@@ -48,9 +35,9 @@ interface EditableCellProps {
     title: React.ReactNode;
     editable: boolean;
     children: React.ReactNode;
-    dataIndex: keyof IIncome;
-    record: IIncome;
-    handleSave: (record: IIncome) => void;
+    dataIndex: keyof ICategory;
+    record: ICategory;
+    handleSave: (record: ICategory) => void;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -185,12 +172,12 @@ const CategoriesTable = (params: {
             icon: "DirectionBus",
         };
 
-        /*const response = createIncome(newData);
+        const response = createCategory(newData);
 
         response.then((data) => {
-            updateIncomes([...incomes, data]);
+            updateCategories([...categories, data]);
             setCreateButtonLoading(false);
-        }); */
+        });
     };
 
     const handleSave = (row: ICategory) => {
