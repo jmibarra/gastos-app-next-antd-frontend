@@ -8,11 +8,13 @@ import {
     ShopOutlined,
     ShoppingCartOutlined,
     SkinOutlined,
+    FileUnknownOutlined,
 } from "@ant-design/icons";
 
 export const CategoryIcons: React.FC<{ category: string | undefined }> = ({
     category,
 }) => {
+    // Agrega más iconos y categorías según sea necesario si no hay conincidencia devuelvo <FileUnknownOutlined />
     const categoryIcons: any = {
         Transporte: <CarOutlined />,
         Impuestos: <AuditOutlined />,
@@ -21,13 +23,11 @@ export const CategoryIcons: React.FC<{ category: string | undefined }> = ({
         Compras: <ShopOutlined />,
         Supermercado: <ShoppingCartOutlined />,
         Ropa: <SkinOutlined />,
-
-        // Agrega más iconos y categorías según sea necesario
     };
 
     if (!category) {
-        return null;
+        return <FileUnknownOutlined />;
     }
 
-    return categoryIcons[category] || null;
+    return categoryIcons[category] || <FileUnknownOutlined />;
 };

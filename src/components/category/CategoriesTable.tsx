@@ -8,6 +8,7 @@ import {
     deleteCategoryById,
     updateCategoryById,
 } from "@/app/category/services";
+import { CategoryIcons } from "./categoryIcons";
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -184,6 +185,8 @@ const CategoriesTable = (params: {
         {
             title: "Icon",
             dataIndex: "icon",
+            editable: true,
+            render: (value) => <CategoryIcons category={value} />,
         },
         {
             title: "",

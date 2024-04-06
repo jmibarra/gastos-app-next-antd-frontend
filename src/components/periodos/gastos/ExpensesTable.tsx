@@ -29,8 +29,8 @@ const { Option } = Select;
 
 import dayjs from "dayjs";
 
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import { ICategory } from "@/app/category/models";
+import { getCategories } from "@/app/category/services";
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -75,6 +75,15 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<InputRef>(null);
     const form = useContext(EditableContext)!;
+    const [categories, setCategories] = useState<ICategory[]>([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const fetchedCategories = await getCategories();
+            setCategories(fetchedCategories);
+        };
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
         if (editing) {
@@ -105,114 +114,114 @@ const EditableCell: React.FC<EditableCellProps> = ({
     };
 
     let childNode = children;
-    if (
-        editable &&
-        title !== "Estado" &&
-        title !== "Categoría" &&
-        title !== "Fecha de vencimiento"
-    ) {
-        childNode = editing ? (
-            <Form.Item
-                style={{ margin: 0 }}
-                name={dataIndex}
-                rules={[
-                    {
-                        required: true,
-                        message: `${title} is required.`,
-                    },
-                ]}
-            >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
-    }
-
-    if (editable && title == "Estado") {
-        childNode = editing ? (
-            <Form.Item
-                name="status"
-                rules={[
-                    {
-                        required: true,
-                        message: "Por favor seleccione un estado.",
-                    },
-                ]}
-            >
-                {/* Deberia dinamizar esto trayendome las opciones desde la api */}
-                <Select ref={inputRef} onPressEnter={save} onBlur={save}>
-                    <Option value="65d0fb6db33cebd95694e233">Estimado</Option>
-                    <Option value="6553fe526562128ac0dd6f6e">Pendiente</Option>
-                    <Option value="65d0fb82b33cebd95694e234">
-                        Transferido
-                    </Option>
-                    <Option value="6553fd74df59e3f9af341a03">Pago</Option>
-                </Select>
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
-    }
-
-    if (editable && title == "Categoría") {
-        childNode = editing ? (
-            <Form.Item
-                name="category"
-                rules={[
-                    {
-                        required: true,
-                        message: "Por favor seleccione una categoría.",
-                    },
-                ]}
-            >
-                {/* Deberia dinamizar esto trayendome las opciones desde la api */}
-                <Select ref={inputRef} onPressEnter={save} onBlur={save}>
-                    <Option value="6557d86ba3060170d82b6502">
-                        <CarOutlined /> Transporte
-                    </Option>
-                    <Option value="65d10927b33cebd95694e235">
-                        <AuditOutlined /> Impuestos
-                    </Option>
-                </Select>
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
-    }
-
-    if (editable && title == "Fecha de vencimiento") {
-        childNode = editing ? (
-            <Form.Item name="dueDate">
-                <DatePicker ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
+    if (editable) {
+        if (title == "Estado") {
+            childNode = editing ? (
+                <Form.Item
+                    name="status"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Por favor seleccione un estado.",
+                        },
+                    ]}
+                >
+                    {/* Deberia dinamizar esto trayendome las opciones desde la api */}
+                    <Select ref={inputRef} onPressEnter={save} onBlur={save}>
+                        <Option value="65d0fb6db33cebd95694e233">
+                            Estimado
+                        </Option>
+                        <Option value="6553fe526562128ac0dd6f6e">
+                            Pendiente
+                        </Option>
+                        <Option value="65d0fb82b33cebd95694e234">
+                            Transferido
+                        </Option>
+                        <Option value="6553fd74df59e3f9af341a03">Pago</Option>
+                    </Select>
+                </Form.Item>
+            ) : (
+                <div
+                    className="editable-cell-value-wrap"
+                    style={{ paddingRight: 24 }}
+                    onClick={toggleEdit}
+                >
+                    {children}
+                </div>
+            );
+        } else if (title == "Categoría") {
+            childNode = editing ? (
+                <Form.Item
+                    name="category"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Por favor seleccione una categoría.",
+                        },
+                    ]}
+                >
+                    {/* Deberia dinamizar esto trayendome las opciones desde la api */}
+                    <Select ref={inputRef} onPressEnter={save} onBlur={save}>
+                        {categories.map((category) => (
+                            <Option value={category._id}>
+                                {" "}
+                                <CategoryIcons category={category.name} />
+                                {category.name}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+            ) : (
+                <div
+                    className="editable-cell-value-wrap"
+                    style={{ paddingRight: 24 }}
+                    onClick={toggleEdit}
+                >
+                    {children}
+                </div>
+            );
+        } else if (title == "Fecha de vencimiento") {
+            childNode = editing ? (
+                <Form.Item name="dueDate">
+                    <DatePicker
+                        ref={inputRef}
+                        onPressEnter={save}
+                        onBlur={save}
+                    />
+                </Form.Item>
+            ) : (
+                <div
+                    className="editable-cell-value-wrap"
+                    style={{ paddingRight: 24 }}
+                    onClick={toggleEdit}
+                >
+                    {children}
+                </div>
+            );
+        } else {
+            childNode = editing ? (
+                <Form.Item
+                    style={{ margin: 0 }}
+                    name={dataIndex}
+                    rules={[
+                        {
+                            required: true,
+                            message: `${title} is required.`,
+                        },
+                    ]}
+                >
+                    <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                </Form.Item>
+            ) : (
+                <div
+                    className="editable-cell-value-wrap"
+                    style={{ paddingRight: 24 }}
+                    onClick={toggleEdit}
+                >
+                    {children}
+                </div>
+            );
+        }
     }
 
     return <td {...restProps}>{childNode}</td>;
