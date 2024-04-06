@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
 import { Button, Form, Input, Popconfirm, Table } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
-
-import { deleteIncomeById } from "@/app/period/[period]/services";
 import { ICategory } from "@/app/category/models";
 import {
     createCategory,
@@ -81,28 +79,58 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
     let childNode = children;
     if (editable) {
-        childNode = editing ? (
-            <Form.Item
-                style={{ margin: 0 }}
-                name={dataIndex}
-                rules={[
-                    {
-                        required: true,
-                        message: `${title} is required.`,
-                    },
-                ]}
-            >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
+        if (title == "Color") {
+            childNode = editing ? (
+                <Form.Item
+                    style={{ margin: 0 }}
+                    name={dataIndex}
+                    rules={[
+                        {
+                            required: true,
+                            message: `${title} is required.`,
+                        },
+                    ]}
+                >
+                    <Input
+                        ref={inputRef}
+                        onPressEnter={save}
+                        onBlur={save}
+                        type="color"
+                    />
+                </Form.Item>
+            ) : (
+                <div
+                    className="editable-cell-value-wrap"
+                    style={{ paddingRight: 24 }}
+                    onClick={toggleEdit}
+                >
+                    {children}
+                </div>
+            );
+        } else {
+            childNode = editing ? (
+                <Form.Item
+                    style={{ margin: 0 }}
+                    name={dataIndex}
+                    rules={[
+                        {
+                            required: true,
+                            message: `${title} is required.`,
+                        },
+                    ]}
+                >
+                    <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                </Form.Item>
+            ) : (
+                <div
+                    className="editable-cell-value-wrap"
+                    style={{ paddingRight: 24 }}
+                    onClick={toggleEdit}
+                >
+                    {children}
+                </div>
+            );
+        }
     }
 
     return <td {...restProps}>{childNode}</td>;
@@ -140,6 +168,18 @@ const CategoriesTable = (params: {
             title: "Color",
             dataIndex: "color",
             editable: true,
+            render: (value) => (
+                <span>
+                    <div
+                        style={{
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor: value,
+                            borderRadius: "50%",
+                        }}
+                    />
+                </span>
+            ),
         },
         {
             title: "Icon",
