@@ -3,13 +3,13 @@ import type { GetRef } from "antd";
 import { Button, Form, Input, Popconfirm, Table } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
 
-import {
-    createIncome,
-    deleteIncomeById,
-    updateIncomeById,
-} from "@/app/period/[period]/services";
+import { deleteIncomeById } from "@/app/period/[period]/services";
 import { ICategory } from "@/app/category/models";
-import { createCategory } from "@/app/category/services";
+import {
+    createCategory,
+    deleteCategoryById,
+    updateCategoryById,
+} from "@/app/category/services";
 
 type InputRef = GetRef<typeof Input>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
@@ -71,12 +71,9 @@ const EditableCell: React.FC<EditableCellProps> = ({
             toggleEdit();
 
             const newValue = { ...record, ...values };
+            handleSave(newValue);
 
-            const response = updateIncomeById(newValue._id, newValue);
-
-            response.then((updatedRecord) => {
-                handleSave(updatedRecord);
-            });
+            updateCategoryById(record._id, newValue);
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
         }
@@ -126,7 +123,7 @@ const CategoriesTable = (params: {
     const handleDelete = (key: string) => {
         const newData = categories.filter((item) => item._id !== key);
         updateCategories(newData);
-        deleteIncomeById(key);
+        deleteCategoryById(key);
     };
 
     const defaultColumns: (ColumnTypes[number] & {
