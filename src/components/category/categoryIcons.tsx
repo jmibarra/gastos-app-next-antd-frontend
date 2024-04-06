@@ -1,6 +1,14 @@
 // CategoryIcons.tsx
 import React from "react";
-import { CarOutlined, AuditOutlined } from "@ant-design/icons";
+import {
+    CarOutlined,
+    AuditOutlined,
+    HomeOutlined,
+    SpotifyOutlined,
+    ShopOutlined,
+    ShoppingCartOutlined,
+    SkinOutlined,
+} from "@ant-design/icons";
 
 export const CategoryIcons: React.FC<{ category: string | undefined }> = ({
     category,
@@ -8,6 +16,12 @@ export const CategoryIcons: React.FC<{ category: string | undefined }> = ({
     const categoryIcons: any = {
         Transporte: <CarOutlined />,
         Impuestos: <AuditOutlined />,
+        Hogar: <HomeOutlined />,
+        Suscripciones: <SpotifyOutlined />,
+        Compras: <ShopOutlined />,
+        Supermercado: <ShoppingCartOutlined />,
+        Ropa: <SkinOutlined />,
+
         // Agrega más iconos y categorías según sea necesario
     };
 

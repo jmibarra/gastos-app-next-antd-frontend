@@ -23,7 +23,7 @@ import {
     Status,
 } from "@/app/period/[period]/models/expense.model";
 import { StatusIcons } from "../../status/statusIcons";
-import { CategoryIcons } from "./categoryIcons";
+import { CategoryIcons } from "../../category/categoryIcons";
 import {
     createExpense,
     deleteExpenseById,

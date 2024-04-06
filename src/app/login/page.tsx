@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { Layout, Flex, Form, Input, Button, message } from "antd";
+import { Layout, Flex, Form, Input, Button, message, Row, Card } from "antd";
 
 const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -57,43 +56,51 @@ const Login: React.FC = () => {
     };
 
     return (
-        <Flex gap="middle" wrap="wrap">
-            <Form
-                name="login-form"
-                initialValues={{ remember: true }}
-                onFinish={handleLogin}
-            >
-                <Form.Item
-                    name="email"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Por favor ingresa tu usuario",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Usuario" />
-                </Form.Item>
+        <Row justify="center">
+            <Card title="Iniciar Sesión" style={{ width: 300 }}>
+                <Flex gap="middle" wrap="wrap">
+                    <Form
+                        name="login-form"
+                        initialValues={{ remember: true }}
+                        onFinish={handleLogin}
+                    >
+                        <Form.Item
+                            name="email"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Por favor ingresa tu usuario",
+                                },
+                            ]}
+                        >
+                            <Input placeholder="Usuario" />
+                        </Form.Item>
 
-                <Form.Item
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Por favor ingresa tu contraseña",
-                        },
-                    ]}
-                >
-                    <Input.Password placeholder="Contraseña" />
-                </Form.Item>
+                        <Form.Item
+                            name="password"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Por favor ingresa tu contraseña",
+                                },
+                            ]}
+                        >
+                            <Input.Password placeholder="Contraseña" />
+                        </Form.Item>
 
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={loading}>
-                        Iniciar Sesión
-                    </Button>
-                </Form.Item>
-            </Form>
-        </Flex>
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                loading={loading}
+                            >
+                                Iniciar Sesión
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Flex>
+            </Card>
+        </Row>
     );
 };
 

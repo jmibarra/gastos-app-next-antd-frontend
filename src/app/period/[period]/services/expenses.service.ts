@@ -1,6 +1,9 @@
+"use client";
 import { IExpense } from "../models/expense.model";
 
-const userData = JSON.parse(localStorage.getItem("user") as string);
+const parsedUserData = localStorage.getItem("user");
+const user = parsedUserData ? JSON.parse(parsedUserData) : null;
+const authToken = user ? user.token : null;
 
 export const getExpensesByPeriod = async (period: string): Promise<IExpense[]> => {
     const url = "http://localhost:8080/expenses/all/";
@@ -9,7 +12,7 @@ export const getExpensesByPeriod = async (period: string): Promise<IExpense[]> =
     const response = await fetch(urlWithPeriod, {
         method: "GET",
         headers: {
-            Authorization: `${userData?.token}`,
+            Authorization: authToken,
             "Content-Type": "application/json",
         },
     });
@@ -24,7 +27,7 @@ export const deleteExpenseById = async (id: string) => {
     const response = await fetch(url, {
         method: "DELETE",
         headers: {
-            Authorization: `${userData?.token}`,
+            Authorization: authToken,
             "Content-Type": "application/json",
         },
     });
@@ -37,7 +40,7 @@ export const updateExpenseById = async (id: string, expense: IExpense) => {
         method: "PATCH",
         body: JSON.stringify(expense),
         headers: {
-            Authorization: `${userData?.token}`,
+            Authorization: authToken,
             "Content-Type": "application/json",
         },
     });
@@ -52,7 +55,7 @@ export const createExpense = async (expense: IExpense) => {
         method: "POST",
         body: JSON.stringify(expense),
         headers: {
-            Authorization: `${userData?.token}`,
+            Authorization: authToken,
             "Content-Type": "application/json",
         },
     })

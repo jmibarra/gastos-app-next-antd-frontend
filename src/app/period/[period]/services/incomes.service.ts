@@ -1,6 +1,8 @@
 import { IIncome } from "../models/income.model";
 
-const userData = JSON.parse(localStorage.getItem("user") as string);
+const parsedUserData = localStorage.getItem("user");
+const user = parsedUserData ? JSON.parse(parsedUserData) : null;
+const authToken = user ? user.token : null;
 
 export const getIncomesByPeriod = async (period: string): Promise<IIncome[]> => {
     const url = "http://localhost:8080/incomes/all/";
@@ -9,7 +11,7 @@ export const getIncomesByPeriod = async (period: string): Promise<IIncome[]> => 
     const response = await fetch(urlWithPeriod, {
         method: "GET",
         headers: {
-            Authorization: `${userData?.token}`,
+            Authorization: authToken,
             "Content-Type": "application/json",
         },
     });
@@ -25,7 +27,7 @@ export const createIncome = async (income: IIncome) => {
         method: "POST",
         body: JSON.stringify(income),
         headers: {
-            Authorization: `${userData?.token}`,
+            Authorization: authToken,
             "Content-Type": "application/json",
         },
     })
@@ -40,7 +42,7 @@ export const deleteIncomeById = async (id: string) => {
     const response = await fetch(url, {
         method: "DELETE",
         headers: {
-            Authorization: `${userData?.token}`,
+            Authorization: authToken,
             "Content-Type": "application/json",
         },
     });
@@ -53,7 +55,7 @@ export const updateIncomeById = async (id: string, income: IIncome) => {
         method: "PATCH",
         body: JSON.stringify(income),
         headers: {
-            Authorization: `${userData?.token}`,
+            Authorization: authToken,
             "Content-Type": "application/json",
         },
     });

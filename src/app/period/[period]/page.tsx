@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import Authenticated from "../../authenticated/page";
-import { Card, Col, DatePicker, Divider, Row, Statistic } from "antd";
+import { Col, DatePicker, Divider, Row } from "antd";
 import ExpenseTable from "@/components/periodos/gastos/ExpensesTable";
 import IncomeTable from "@/components/periodos/Ingresos/IncomeTable";
 import { IExpense } from "./models/expense.model";
@@ -34,8 +33,8 @@ export default function Period({ params }: { params: { period: string } }) {
         fetchIncomes();
     }, [period]);
 
-    const handlePeriodChange = (date: any, dateString: string) => {
-        setPeriod(dateString);
+    const handlePeriodChange = (date: any, dateString: string | string[]) => {
+        setPeriod(typeof dateString === "string" ? dateString : dateString[0]);
     };
 
     return (
