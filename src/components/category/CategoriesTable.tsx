@@ -37,6 +37,7 @@ interface EditableCellProps {
     dataIndex: keyof ICategory;
     record: ICategory;
     handleSave: (record: ICategory) => void;
+    authToken: string;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -46,6 +47,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     dataIndex,
     record,
     handleSave,
+    authToken,
     ...restProps
 }) => {
     const [editing, setEditing] = useState(false);
@@ -72,7 +74,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             const newValue = { ...record, ...values };
             handleSave(newValue);
 
-            updateCategoryById(record._id, newValue);
+            updateCategoryById(record._id, newValue, authToken);
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
         }
@@ -137,22 +139,22 @@ const EditableCell: React.FC<EditableCellProps> = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-type EditableTableProps = Parameters<typeof Table>[0];
+type EditableTableProps = Parameters<typeof Table<ICategory>>[0];
 
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
 const CategoriesTable = (params: {
     categories: ICategory[];
     updateCategories: any;
-    period: string;
+    authToken: string;
 }) => {
     const [createButtonLoading, setCreateButtonLoading] = useState(false);
-    const { categories, updateCategories } = params;
+    const { categories, updateCategories, authToken } = params;
 
     const handleDelete = (key: string) => {
         const newData = categories.filter((item) => item._id !== key);
         updateCategories(newData);
-        deleteCategoryById(key);
+        deleteCategoryById(key, authToken);
     };
 
     const defaultColumns: (ColumnTypes[number] & {
@@ -216,7 +218,7 @@ const CategoriesTable = (params: {
             icon: "DirectionBus",
         };
 
-        const response = createCategory(newData);
+        const response = createCategory(newData, authToken);
 
         response.then((data) => {
             updateCategories([...categories, data]);
@@ -254,6 +256,7 @@ const CategoriesTable = (params: {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave,
+                authToken,
             }),
         };
     });

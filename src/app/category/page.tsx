@@ -7,14 +7,23 @@ import CategoriesTable from "@/components/category/CategoriesTable";
 
 const Category = () => {
     const [categories, setCategories] = useState([]);
+    const [authToken, setAuthToken] = useState<string>("");
+
+    useEffect(() => {
+        // Esto solo se ejecutará en el cliente
+        const parsedUserData = localStorage.getItem("user");
+        const user = parsedUserData ? JSON.parse(parsedUserData) : null;
+        const token = user ? user.token : null;
+        setAuthToken(token);
+    }, []);
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const fetchedCategories = await getCategories();
+            const fetchedCategories = await getCategories(authToken);
             setCategories(fetchedCategories);
         };
         fetchCategories();
-    }, []);
+    }, [authToken]);
 
     console.log(categories);
 
@@ -27,6 +36,7 @@ const Category = () => {
                     <CategoriesTable
                         categories={categories}
                         updateCategories={setCategories}
+                        authToken={authToken}
                     />
                 </Col>
             </Row>

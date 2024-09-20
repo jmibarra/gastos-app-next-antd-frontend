@@ -1,10 +1,6 @@
 import { ICategory } from "../models";
 
-const parsedUserData = localStorage.getItem("user");
-const user = parsedUserData ? JSON.parse(parsedUserData) : null;
-const authToken = user ? user.token : null;
-
-export const getCategories = async () => {
+export const getCategories = async (authToken: string) => {
     const url = "http://localhost:8080/category";
 
     const response = await fetch(url, {
@@ -20,7 +16,7 @@ export const getCategories = async () => {
     
 }
 
-export const createCategory = async (category: ICategory) => {
+export const createCategory = async (category: ICategory, authToken: string) => {
     const url = "http://localhost:8080/category";
 
     const response = await fetch(url, {
@@ -36,7 +32,7 @@ export const createCategory = async (category: ICategory) => {
     return response.json().then((data) => data);
 }
 
-export const updateCategoryById = async (id: string, category: ICategory) => {
+export const updateCategoryById = async (id: string, category: ICategory, authToken: string) => {
     const url = `http://localhost:8080/category/${id}`;
 
     const response = await fetch(url, {
@@ -51,7 +47,7 @@ export const updateCategoryById = async (id: string, category: ICategory) => {
     return response.json().then((data) => data);
 }
 
-export const deleteCategoryById = async (id: string) => {
+export const deleteCategoryById = async (id: string, authToken: string) => {
     const url = `http://localhost:8080/category/${id}`;
 
     const response = await fetch(url, {
