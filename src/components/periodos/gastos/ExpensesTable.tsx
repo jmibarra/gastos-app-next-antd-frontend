@@ -10,13 +10,8 @@ import {
     Table,
     Tag,
 } from "antd";
-import {
-    AuditOutlined,
-    CarOutlined,
-    DeleteTwoTone,
-    PlusOutlined,
-} from "@ant-design/icons";
-import { IExpense, Status } from "@/app/period/[period]/models/expense.model";
+import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
+import { IExpense } from "@/app/period/[period]/models/expense.model";
 import { StatusIcons } from "../../status/statusIcons";
 import { CategoryIcons } from "../../category/categoryIcons";
 import {
@@ -31,8 +26,10 @@ import dayjs from "dayjs";
 
 import { ICategory } from "@/app/category/models";
 import { getCategories } from "@/app/category/services";
+import { Status } from "@/app/period/[period]/models";
 
 type InputRef = GetRef<typeof Input>;
+type SelectRef = GetRef<typeof Select>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
@@ -74,6 +71,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<InputRef>(null);
+    const selectRef = useRef<SelectRef>(null);
     const form = useContext(EditableContext)!;
     const [categories, setCategories] = useState<ICategory[]>([]);
 
@@ -87,7 +85,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
     useEffect(() => {
         if (editing) {
-            inputRef.current!.focus();
+            if (title === "Estado" || title === "Categoría") {
+                selectRef.current?.focus();
+            } else {
+                inputRef.current?.focus();
+            }
         }
     }, [editing]);
 
@@ -127,7 +129,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                     ]}
                 >
                     {/* Deberia dinamizar esto trayendome las opciones desde la api */}
-                    <Select ref={inputRef} onPressEnter={save} onBlur={save}>
+                    <Select ref={selectRef} onBlur={save}>
                         <Option value="65d0fb6db33cebd95694e233">
                             Estimado
                         </Option>
@@ -161,7 +163,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                     ]}
                 >
                     {/* Deberia dinamizar esto trayendome las opciones desde la api */}
-                    <Select ref={inputRef} onPressEnter={save} onBlur={save}>
+                    <Select ref={selectRef} onBlur={save}>
                         {categories.map((category) => (
                             <Option value={category._id}>
                                 {" "}
@@ -227,7 +229,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-type EditableTableProps = Parameters<typeof Table>[0];
+type EditableTableProps = Parameters<typeof Table<IExpense>>[0];
 
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
