@@ -15,6 +15,7 @@ export default function Period({ params }: { params: { period: string } }) {
     const [period, setPeriod] = useState(params.period);
     const [expenses, setExpenses] = useState<IExpense[]>([]);
     const [incomes, setIncomes] = useState<IIncome[]>([]);
+    const [authToken, setAuthToken] = useState<string>("");
 
     useEffect(() => {
         const fetchExpenses = async () => {
@@ -26,12 +27,20 @@ export default function Period({ params }: { params: { period: string } }) {
 
     useEffect(() => {
         const fetchIncomes = async () => {
-            const fetchedIncomes = await getIncomesByPeriod(period);
+            const fetchedIncomes = await getIncomesByPeriod(period, authToken);
             setIncomes(fetchedIncomes);
         };
 
         fetchIncomes();
-    }, [period]);
+    }, [period, authToken]);
+
+    useEffect(() => {
+        // Esto solo se ejecutará en el cliente
+        const parsedUserData = localStorage.getItem("user");
+        const user = parsedUserData ? JSON.parse(parsedUserData) : null;
+        const token = user ? user.token : null;
+        setAuthToken(token);
+    }, []);
 
     const handlePeriodChange = (date: any, dateString: string | string[]) => {
         setPeriod(typeof dateString === "string" ? dateString : dateString[0]);
@@ -68,6 +77,7 @@ export default function Period({ params }: { params: { period: string } }) {
                         incomes={incomes}
                         updateIncomes={setIncomes}
                         period={period}
+                        authToken={authToken}
                     />
                 </Col>
             </Row>

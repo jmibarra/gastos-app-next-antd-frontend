@@ -1,10 +1,6 @@
 import { IIncome } from "../models/income.model";
 
-const parsedUserData = localStorage.getItem("user");
-const user = parsedUserData ? JSON.parse(parsedUserData) : null;
-const authToken = user ? user.token : null;
-
-export const getIncomesByPeriod = async (period: string): Promise<IIncome[]> => {
+export const getIncomesByPeriod = async (period: string, authToken: string): Promise<IIncome[]> => {
     const url = "http://localhost:8080/incomes/all/";
     const urlWithPeriod = url + period;
 
@@ -20,7 +16,7 @@ export const getIncomesByPeriod = async (period: string): Promise<IIncome[]> => 
     else return [];
 };
 
-export const createIncome = async (income: IIncome) => {
+export const createIncome = async (income: IIncome, authToken: string) => {
     const url = "http://localhost:8080/incomes";
 
     const response = await fetch(url, {
@@ -36,7 +32,7 @@ export const createIncome = async (income: IIncome) => {
     return response.json().then((data) => data);
 }
 
-export const deleteIncomeById = async (id: string) => {
+export const deleteIncomeById = async (id: string, authToken: string) => {
     const url = `http://localhost:8080/incomes/${id}`;
 
     const response = await fetch(url, {
@@ -48,7 +44,7 @@ export const deleteIncomeById = async (id: string) => {
     });
 }
 
-export const updateIncomeById = async (id: string, income: IIncome) => {
+export const updateIncomeById = async (id: string, income: IIncome, authToken: string) => {
     const url = `http://localhost:8080/incomes/${id}`;
 
     const response = await fetch(url, {
