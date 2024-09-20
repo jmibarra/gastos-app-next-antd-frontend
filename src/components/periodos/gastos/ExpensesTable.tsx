@@ -59,6 +59,7 @@ interface EditableCellProps {
     dataIndex: keyof IExpense;
     record: IExpense;
     handleSave: (record: IExpense) => void;
+    authToken: string;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -68,6 +69,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     dataIndex,
     record,
     handleSave,
+    authToken,
     ...restProps
 }) => {
     const [editing, setEditing] = useState(false);
@@ -110,7 +112,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
             const newValue = { ...record, ...values };
 
-            const response = updateExpenseById(newValue._id, newValue);
+            const response = updateExpenseById(
+                newValue._id,
+                newValue,
+                authToken
+            );
             response.then((updatedRecord) => {
                 handleSave(updatedRecord);
             });
@@ -237,15 +243,16 @@ const ExpenseTable = (params: {
     expenses: IExpense[];
     updateExpenses: any;
     period: string;
+    authToken: string;
 }) => {
     const [createButtonLoading, setCreateButtonLoading] = useState(false);
 
-    const { expenses, updateExpenses } = params;
+    const { expenses, updateExpenses, authToken } = params;
 
     const handleDelete = (key: string) => {
         const newData = expenses.filter((item) => item._id !== key);
         updateExpenses(newData);
-        deleteExpenseById(key);
+        deleteExpenseById(key, authToken);
     };
 
     const defaultColumns: (ColumnTypes[number] & {
@@ -322,7 +329,7 @@ const ExpenseTable = (params: {
             period: params.period, //Paso el periodo o alcanza con copiar a sus hermanos?
             category: "6557d86ba3060170d82b6502",
         };
-        const response = createExpense(newData);
+        const response = createExpense(newData, authToken);
 
         response.then((data) => {
             updateExpenses([...expenses, data]);
@@ -360,6 +367,7 @@ const ExpenseTable = (params: {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave,
+                authToken,
             }),
         };
     });

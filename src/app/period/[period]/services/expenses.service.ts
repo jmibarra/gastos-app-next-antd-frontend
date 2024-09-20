@@ -1,11 +1,7 @@
 "use client";
 import { IExpense } from "../models/expense.model";
 
-const parsedUserData = localStorage.getItem("user");
-const user = parsedUserData ? JSON.parse(parsedUserData) : null;
-const authToken = user ? user.token : null;
-
-export const getExpensesByPeriod = async (period: string): Promise<IExpense[]> => {
+export const getExpensesByPeriod = async (period: string, authToken: string): Promise<IExpense[]> => {
     const url = "http://localhost:8080/expenses/all/";
     const urlWithPeriod = url + period;
 
@@ -21,7 +17,7 @@ export const getExpensesByPeriod = async (period: string): Promise<IExpense[]> =
     else return [];
 };
 
-export const deleteExpenseById = async (id: string) => {
+export const deleteExpenseById = async (id: string, authToken: string) => {
     const url = `http://localhost:8080/expenses/${id}`;
 
     const response = await fetch(url, {
@@ -33,7 +29,7 @@ export const deleteExpenseById = async (id: string) => {
     });
 }
 
-export const updateExpenseById = async (id: string, expense: IExpense) => {
+export const updateExpenseById = async (id: string, expense: IExpense, authToken: string) => {
     const url = `http://localhost:8080/expenses/${id}`;
 
     const response = await fetch(url, {
@@ -48,7 +44,7 @@ export const updateExpenseById = async (id: string, expense: IExpense) => {
     return response.json().then((data) => data);
 }
 
-export const createExpense = async (expense: IExpense) => {
+export const createExpense = async (expense: IExpense, authToken: string) => {
     const url = "http://localhost:8080/expenses";
 
     const response = await fetch(url, {

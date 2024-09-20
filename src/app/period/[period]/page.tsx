@@ -18,12 +18,23 @@ export default function Period({ params }: { params: { period: string } }) {
     const [authToken, setAuthToken] = useState<string>("");
 
     useEffect(() => {
+        // Esto solo se ejecutará en el cliente
+        const parsedUserData = localStorage.getItem("user");
+        const user = parsedUserData ? JSON.parse(parsedUserData) : null;
+        const token = user ? user.token : null;
+        setAuthToken(token);
+    }, []);
+
+    useEffect(() => {
         const fetchExpenses = async () => {
-            const fetchedExpenses = await getExpensesByPeriod(period);
+            const fetchedExpenses = await getExpensesByPeriod(
+                period,
+                authToken
+            );
             setExpenses(fetchedExpenses);
         };
         fetchExpenses();
-    }, [period]);
+    }, [period, authToken]);
 
     useEffect(() => {
         const fetchIncomes = async () => {
@@ -33,14 +44,6 @@ export default function Period({ params }: { params: { period: string } }) {
 
         fetchIncomes();
     }, [period, authToken]);
-
-    useEffect(() => {
-        // Esto solo se ejecutará en el cliente
-        const parsedUserData = localStorage.getItem("user");
-        const user = parsedUserData ? JSON.parse(parsedUserData) : null;
-        const token = user ? user.token : null;
-        setAuthToken(token);
-    }, []);
 
     const handlePeriodChange = (date: any, dateString: string | string[]) => {
         setPeriod(typeof dateString === "string" ? dateString : dateString[0]);
@@ -88,6 +91,7 @@ export default function Period({ params }: { params: { period: string } }) {
                         expenses={expenses}
                         updateExpenses={setExpenses}
                         period={period}
+                        authToken={authToken}
                     />
                 </Col>
             </Row>

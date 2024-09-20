@@ -199,7 +199,7 @@ const IncomeTable = (params: {
     authToken: string;
 }) => {
     const [createButtonLoading, setCreateButtonLoading] = useState(false);
-    const { incomes, updateIncomes, period, authToken } = params;
+    const { incomes, updateIncomes, authToken } = params;
 
     const handleDelete = (key: string) => {
         const newData = incomes.filter((item) => item._id !== key);
