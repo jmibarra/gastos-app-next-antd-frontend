@@ -1,3 +1,5 @@
+import { Status } from "./status.model";
+
 export interface IIncome {
     _id: string;
     title: string;
@@ -7,11 +9,4 @@ export interface IIncome {
     amount?: number;
     type?: string;
     owner?: string;
-}
-
-export interface Status {
-    _id: string;
-    name: string;
-    color: string;
-    owner: string;
 }

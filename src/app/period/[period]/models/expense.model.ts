@@ -1,4 +1,5 @@
 import { ICategory } from "@/app/category/models";
+import { Status } from "./status.model";
 
 export interface IExpense {
     _id: string;
@@ -22,11 +23,4 @@ export interface IExpensePlain {
     amount?: number;
     type?: string;
     owner?: string;
-}
-
-export interface Status {
-    _id: string;
-    name: string;
-    color: string;
-    owner: string;
 }
