@@ -1,15 +1,43 @@
 "use client";
-import React from "react";
-import { redirect } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Spin } from "antd";
 
 const Authenticated = (props: any) => {
     const { children } = props;
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
+    const [authenticated, setAuthenticated] = useState(false);
 
-    const userData = JSON.parse(localStorage.getItem("user") as string);
+    useEffect(() => {
+        const userData = JSON.parse(localStorage.getItem("user") as string);
+        if (!userData) {
+            router.push("/login");
+        } else {
+            setAuthenticated(true);
+        }
+        setLoading(false);
+    }, [router]);
 
-    if (!userData) {
-        redirect("/login");
+    if (loading) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100vh",
+                }}
+            >
+                <Spin size="large" />
+            </div>
+        );
     }
+
+    if (!authenticated) {
+        return null; // Evitar renderizar cualquier contenido hasta que se autentique
+    }
+
     return <>{children}</>;
 };
 

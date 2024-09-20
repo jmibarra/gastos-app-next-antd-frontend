@@ -25,8 +25,6 @@ const Category = () => {
         fetchCategories();
     }, [authToken]);
 
-    console.log(categories);
-
     return (
         <Authenticated>
             <h1>Categorías de gastos </h1>
