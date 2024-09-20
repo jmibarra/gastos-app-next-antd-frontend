@@ -178,7 +178,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-type EditableTableProps = Parameters<typeof Table>[0];
+type EditableTableProps = Parameters<typeof Table<IIncome>>[0];
 
 type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
 
