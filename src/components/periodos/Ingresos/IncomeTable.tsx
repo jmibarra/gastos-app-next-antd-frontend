@@ -23,6 +23,7 @@ import {
 const { Option } = Select;
 
 type InputRef = GetRef<typeof Input>;
+type SelectRef = GetRef<typeof Select>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
@@ -66,11 +67,16 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<InputRef>(null);
+    const selectRef = useRef<SelectRef>(null);
     const form = useContext(EditableContext)!;
 
     useEffect(() => {
         if (editing) {
-            inputRef.current!.focus();
+            if (title === "Estado") {
+                selectRef.current?.focus();
+            } else {
+                inputRef.current?.focus();
+            }
         }
     }, [editing]);
 
@@ -139,7 +145,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 ]}
             >
                 {/* Deberia dinamizar esto trayendome las opciones desde la api */}
-                <Select ref={inputRef} onPressEnter={save} onBlur={save}>
+                <Select ref={selectRef} onBlur={save}>
                     <Option value="65d0fb6db33cebd95694e233">Estimado</Option>
                     <Option value="6553fe526562128ac0dd6f6e">Pendiente</Option>
                     <Option value="65d0fb82b33cebd95694e234">
