@@ -186,7 +186,11 @@ const CategoriesTable = (params: {
             title: "Icon",
             dataIndex: "icon",
             editable: true,
-            render: (value) => <CategoryIcons category={value} />,
+            render: (value) => (
+                <>
+                    <CategoryIcons category={value} /> {value}
+                </>
+            ),
         },
         {
             title: "",

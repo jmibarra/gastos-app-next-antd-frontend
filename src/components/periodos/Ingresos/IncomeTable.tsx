@@ -156,7 +156,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     if (editable && title == "Fecha de ingreso") {
         childNode = editing ? (
             <Form.Item name="date">
-                <DatePicker ref={inputRef} onPressEnter={save} onBlur={save} />
+                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
             </Form.Item>
         ) : (
             <div
