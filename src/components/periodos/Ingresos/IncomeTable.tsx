@@ -24,6 +24,7 @@ const { Option } = Select;
 
 type InputRef = GetRef<typeof Input>;
 type SelectRef = GetRef<typeof Select>;
+type DateRef = GetRef<typeof DatePicker>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
@@ -68,12 +69,15 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<InputRef>(null);
     const selectRef = useRef<SelectRef>(null);
+    const dateRef = useRef<DateRef>(null);
     const form = useContext(EditableContext)!;
 
     useEffect(() => {
         if (editing) {
             if (title === "Estado") {
                 selectRef.current?.focus();
+            } else if (title === "Fecha de vencimiento") {
+                dateRef.current?.focus();
             } else {
                 inputRef.current?.focus();
             }
@@ -168,7 +172,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     if (editable && title == "Fecha de ingreso") {
         childNode = editing ? (
             <Form.Item name="date">
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                <DatePicker ref={dateRef} onBlur={save} />
             </Form.Item>
         ) : (
             <div

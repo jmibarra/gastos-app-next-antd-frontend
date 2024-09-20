@@ -30,6 +30,7 @@ import { Status } from "@/app/period/[period]/models";
 
 type InputRef = GetRef<typeof Input>;
 type SelectRef = GetRef<typeof Select>;
+type DateRef = GetRef<typeof DatePicker>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
@@ -72,6 +73,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<InputRef>(null);
     const selectRef = useRef<SelectRef>(null);
+    const dateRef = useRef<DateRef>(null);
     const form = useContext(EditableContext)!;
     const [categories, setCategories] = useState<ICategory[]>([]);
 
@@ -87,6 +89,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
         if (editing) {
             if (title === "Estado" || title === "Categoría") {
                 selectRef.current?.focus();
+            } else if (title === "Fecha de vencimiento") {
+                dateRef.current?.focus();
             } else {
                 inputRef.current?.focus();
             }
@@ -185,11 +189,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         } else if (title == "Fecha de vencimiento") {
             childNode = editing ? (
                 <Form.Item name="dueDate">
-                    <DatePicker
-                        ref={inputRef}
-                        onPressEnter={save}
-                        onBlur={save}
-                    />
+                    <DatePicker ref={dateRef} onBlur={save} />
                 </Form.Item>
             ) : (
                 <div
