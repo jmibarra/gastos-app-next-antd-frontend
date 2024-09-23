@@ -112,7 +112,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     };
 
     let childNode = children;
-    if (editable && title !== "Estado" && title !== "Fecha de vencimiento") {
+    if (editable && title !== "Estado" && title !== "Fecha de ingreso") {
         childNode = editing ? (
             <Form.Item
                 style={{ margin: 0 }}
@@ -172,7 +172,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
     if (editable && title == "Fecha de ingreso") {
         childNode = editing ? (
             <Form.Item name="date">
-                <DatePicker ref={dateRef} onBlur={save} />
+                <Input
+                    ref={inputRef}
+                    type="date"
+                    onPressEnter={save}
+                    onBlur={save}
+                />
             </Form.Item>
         ) : (
             <div
@@ -284,7 +289,7 @@ const IncomeTable = (params: {
             ...item,
             ...row,
         });
-        updateIncomes(newData);
+        updateIncomes(newData[index]);
     };
 
     const components = {
