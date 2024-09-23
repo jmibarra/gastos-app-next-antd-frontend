@@ -81,7 +81,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const fetchedCategories = await getCategories();
+            const fetchedCategories = await getCategories(authToken);
             setCategories(fetchedCategories);
         };
         fetchCategories();
