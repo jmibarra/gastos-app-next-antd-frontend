@@ -1,4 +1,6 @@
 "use client";
+import dayjs from "dayjs";
+
 import { useEffect, useState } from "react";
 import Authenticated from "../../authenticated/page";
 import { Col, DatePicker, Divider, Row } from "antd";
@@ -57,6 +59,7 @@ export default function Period({ params }: { params: { period: string } }) {
                 onChange={handlePeriodChange}
                 picker="month"
                 format={"MMYYYY"}
+                value={dayjs(period, "MMYYYY")}
             />
             <Divider orientation="left">Datos del mes</Divider>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
