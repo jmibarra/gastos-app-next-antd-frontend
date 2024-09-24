@@ -1,7 +1,16 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
 import dayjs from "dayjs";
-import { Button, Form, Input, Popconfirm, Select, Table, Tag } from "antd";
+import {
+    Button,
+    Form,
+    Input,
+    Popconfirm,
+    Select,
+    DatePicker,
+    Table,
+    Tag,
+} from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
 import { StatusIcons } from "../../status/statusIcons";
 import { IIncome, Status } from "@/app/period/[period]/models";
@@ -15,6 +24,7 @@ const { Option } = Select;
 
 type InputRef = GetRef<typeof Input>;
 type SelectRef = GetRef<typeof Select>;
+type DateRef = GetRef<typeof DatePicker>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
@@ -59,12 +69,15 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<InputRef>(null);
     const selectRef = useRef<SelectRef>(null);
+    const dateRef = useRef<DateRef>(null);
     const form = useContext(EditableContext)!;
 
     useEffect(() => {
         if (editing) {
             if (title === "Estado") {
                 selectRef.current?.focus();
+            } else if (title === "Fecha de vencimiento") {
+                dateRef.current?.focus();
             } else {
                 inputRef.current?.focus();
             }
@@ -82,6 +95,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
             toggleEdit();
 
+            if (values.date) {
+                values.date = dayjs(values.date).startOf("day").toDate();
+                console.log(values);
+            }
+
             const newValue = { ...record, ...values };
 
             const response = updateIncomeById(
@@ -91,6 +109,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             );
 
             response.then((updatedRecord) => {
+                console.log(updatedRecord);
                 handleSave(updatedRecord);
             });
         } catch (errInfo) {
@@ -159,7 +178,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
     if (editable && title == "Fecha de ingreso") {
         childNode = editing ? (
             <Form.Item name="date">
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                <Input
+                    ref={inputRef}
+                    type="date"
+                    onPressEnter={save}
+                    onBlur={save}
+                />
             </Form.Item>
         ) : (
             <div
