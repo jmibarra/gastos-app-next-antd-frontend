@@ -110,6 +110,10 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
             toggleEdit();
 
+            if (values.dueDate) {
+                values.date = dayjs(values.dueDate).startOf("day").toDate();
+            }
+
             const newValue = { ...record, ...values };
 
             const response = updateExpenseById(
@@ -195,7 +199,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
         } else if (title == "Fecha de vencimiento") {
             childNode = editing ? (
                 <Form.Item name="dueDate">
-                    <DatePicker ref={dateRef} onBlur={save} />
+                    <Input
+                        ref={inputRef}
+                        type="date"
+                        onPressEnter={save}
+                        onBlur={save}
+                    />
                 </Form.Item>
             ) : (
                 <div

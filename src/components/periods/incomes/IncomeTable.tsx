@@ -76,7 +76,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         if (editing) {
             if (title === "Estado") {
                 selectRef.current?.focus();
-            } else if (title === "Fecha de vencimiento") {
+            } else if (title === "Fecha de ingreso") {
                 dateRef.current?.focus();
             } else {
                 inputRef.current?.focus();
@@ -97,7 +97,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
             if (values.date) {
                 values.date = dayjs(values.date).startOf("day").toDate();
-                console.log(values);
             }
 
             const newValue = { ...record, ...values };
