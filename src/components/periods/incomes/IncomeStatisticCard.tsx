@@ -1,4 +1,3 @@
-import { IExpense } from "@/app/period/[period]/models/expense.model";
 import { IIncome } from "@/app/period/[period]/models/income.model";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Card, Statistic } from "antd";

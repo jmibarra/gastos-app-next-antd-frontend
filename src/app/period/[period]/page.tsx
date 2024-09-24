@@ -53,7 +53,7 @@ export default function Period({ params }: { params: { period: string } }) {
 
     return (
         <Authenticated>
-            <h1>Gastos {period} </h1>
+            <h1>Periodo {period} </h1>
             <Divider orientation="left">Periodo</Divider>
             <DatePicker
                 onChange={handlePeriodChange}
