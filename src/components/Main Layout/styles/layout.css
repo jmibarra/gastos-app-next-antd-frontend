@@ -1,7 +1,4 @@
-.header {
-    padding: 0;
-    background: #fff !important;
-}
+
 
 .content{
     margin: 24px 16px;
@@ -20,12 +17,6 @@
    font-size: 1.5rem; 
 }
 
-.sider-trigger-button{
-    font-size: '16px';
-    width: 64;
-    height: 64;
-}
-
 .menu-bar{
     display: flex ;
     flex-direction: column;
@@ -42,6 +33,5 @@
     padding: 8px;
     border-radius: 4px;
     font-size: 15px;
-    color: #1890ff;
     cursor: pointer;
 }

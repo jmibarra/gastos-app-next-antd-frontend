@@ -19,7 +19,7 @@ const DashboardPage = () => {
             <div style={{ padding: "20px" }}>
                 <Title level={2}>Página de Inversiones</Title>
                 <Paragraph>
-                    Esta es una página de ejemplo para la ruta de inversiones.
+                    Esta es una página de ejemplo para la ruta de dashboard.
                     Aquí se mostrarán todos los detalles relacionados con tus
                     inversiones.
                 </Paragraph>
