@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
 import { Button, Form, Input, Popconfirm, Table } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
-import { ICategory } from "@/app/category/models";
+import { ICategory } from "@/app/settings/category/models";
 import {
     createCategory,
     deleteCategoryById,
     updateCategoryById,
-} from "@/app/category/services";
+} from "@/app/settings/category/services";
 import { CategoryIcons } from "./categoryIcons";
 
 type InputRef = GetRef<typeof Input>;

@@ -24,8 +24,8 @@ const { Option } = Select;
 
 import dayjs from "dayjs";
 
-import { ICategory } from "@/app/category/models";
-import { getCategories } from "@/app/category/services";
+import { ICategory } from "@/app/settings/category/models";
+import { getCategories } from "@/app/settings/category/services";
 import { Status } from "@/app/period/[period]/models";
 
 type InputRef = GetRef<typeof Input>;
