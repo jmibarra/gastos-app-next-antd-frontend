@@ -1,4 +1,4 @@
-import { Status } from "./status.model";
+import { Status } from "../../../settings/status/models/status.model";
 
 export interface IIncome {
     _id: string;

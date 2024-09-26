@@ -1,5 +1,5 @@
-import { ICategory } from "@/app/category/models";
-import { Status } from "./status.model";
+import { ICategory } from "@/app/settings/category/models";
+import { Status } from "../../../settings/status/models/status.model";
 
 export interface IExpense {
     _id: string;
