@@ -4,6 +4,7 @@ import {
     DashboardOutlined,
     DollarOutlined,
     ReconciliationOutlined,
+    SettingOutlined,
     UnlockOutlined,
 } from "@ant-design/icons";
 import { Menu, message } from "antd"; // Importa message
@@ -39,6 +40,9 @@ const Sidebar = () => {
                 router.push("/investments");
                 break;
             case "4":
+                router.push("/settings");
+                break;
+            case "5":
                 handleLogout();
                 break;
             default:
@@ -80,7 +84,12 @@ const Sidebar = () => {
                         icon: <AreaChartOutlined />,
                         label: "Inversiones",
                     },
-                    { key: "4", icon: <UnlockOutlined />, label: "Logout" },
+                    {
+                        key: "4",
+                        icon: <SettingOutlined />,
+                        label: "Configuración",
+                    },
+                    { key: "5", icon: <UnlockOutlined />, label: "Logout" },
                 ]}
             />
         </>

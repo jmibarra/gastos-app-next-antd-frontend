@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Layout, Flex, Form, Input, Button, message, Row, Card } from "antd";
+import { Flex, Form, Input, Button, message, Row, Card } from "antd";
 
 const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);

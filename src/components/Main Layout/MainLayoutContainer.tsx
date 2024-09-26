@@ -2,11 +2,10 @@
 "use client";
 import Sidebar from "@/components/Sidebar";
 import "./styles/layout.css";
-import { Layout, Table, Card, Button, Flex, Typography } from "antd";
+import { Layout, Button } from "antd";
 import Sider from "antd/es/layout/Sider";
-import React, { Children, useState } from "react";
+import React, { useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import CustomHeader from "@/components/CustomHeader";
 
 const { Header, Content } = Layout;
 
