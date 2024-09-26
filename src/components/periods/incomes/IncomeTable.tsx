@@ -13,12 +13,13 @@ import {
 } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
 import { StatusIcons } from "../../status/statusIcons";
-import { IIncome, Status } from "@/app/period/[period]/models";
+import { IIncome } from "@/app/period/[period]/models";
 import {
     createIncome,
     deleteIncomeById,
     updateIncomeById,
 } from "@/app/period/[period]/services";
+import { Status } from "@/app/settings/status/models";
 
 const { Option } = Select;
 
