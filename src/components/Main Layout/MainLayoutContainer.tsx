@@ -15,31 +15,38 @@ const MainLayoutContainer = (props: any) => {
 
     return (
         <Layout>
-            <Sider
-                className="sider"
-                theme="light"
-                trigger={null}
-                collapsible
-                collapsed={collapsed}
-            >
-                <Sidebar />
-            </Sider>
+            <Header>
+                <div className="demo-logo" />
+            </Header>
             <Layout>
-                <Header className="header">
+                <Sider
+                    className="sider"
+                    theme="light"
+                    trigger={null}
+                    collapsible
+                    collapsed={collapsed}
+                >
+                    <Sidebar />
+                </Sider>
+                <Content className="content">
                     <Button
                         type="text"
                         icon={
                             collapsed ? (
-                                <MenuUnfoldOutlined />
+                                <MenuUnfoldOutlined
+                                    style={{ fontSize: "16px" }}
+                                />
                             ) : (
-                                <MenuFoldOutlined />
+                                <MenuFoldOutlined
+                                    style={{ fontSize: "16px" }}
+                                />
                             )
                         }
                         onClick={() => setCollapsed(!collapsed)}
                         className="sider-trigger-button"
                     />
-                </Header>
-                <Content className="content">{children}</Content>
+                    {children}
+                </Content>
             </Layout>
         </Layout>
     );
