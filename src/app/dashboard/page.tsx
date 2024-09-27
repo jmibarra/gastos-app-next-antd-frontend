@@ -165,15 +165,6 @@ const DashboardPage = () => {
                         </Card>
                     </Col>
                 </Row>
-
-                {/* Botón para volver al inicio */}
-                <Button
-                    type="primary"
-                    onClick={handleGoBack}
-                    style={{ marginTop: "20px" }}
-                >
-                    Volver al inicio
-                </Button>
             </div>
         </Authenticated>
     );

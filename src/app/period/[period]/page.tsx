@@ -7,11 +7,9 @@ import { Col, DatePicker, Divider, Row } from "antd";
 import ExpenseTable from "@/components/periods/expenses/ExpensesTable";
 import IncomeTable from "@/components/periods/incomes/IncomeTable";
 import { IExpense } from "./models/expense.model";
-import { ExpenseStatisticCard } from "@/components/periods/expenses/ExpenseStatisticCard";
-import { IncomeStatisticCard } from "@/components/periods/incomes/IncomeStatisticCard";
 import { IIncome } from "./models/income.model";
 import { getExpensesByPeriod, getIncomesByPeriod } from "./services";
-import { MonthResultStatisticCard } from "@/components/periods/MonthResultStatisticCard";
+import MonthMetricsBoards from "@/components/periods/metrics/monthMetricsBoards";
 
 export default function Period({ params }: { params: { period: string } }) {
     const [period, setPeriod] = useState(params.period);
@@ -62,20 +60,7 @@ export default function Period({ params }: { params: { period: string } }) {
                 value={dayjs(period, "MMYYYY")}
             />
             <Divider orientation="left">Datos del mes</Divider>
-            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                <Col className="gutter-row" span={8}>
-                    <IncomeStatisticCard data={incomes} />
-                </Col>
-                <Col className="gutter-row" span={8}>
-                    <ExpenseStatisticCard data={expenses} />
-                </Col>
-                <Col className="gutter-row" span={8}>
-                    <MonthResultStatisticCard
-                        incomes={incomes}
-                        expenses={expenses}
-                    />
-                </Col>
-            </Row>
+            <MonthMetricsBoards incomes={incomes} expenses={expenses} />
             <Divider orientation="left">Ingresos</Divider>
             <Row>
                 <Col span={24}>
