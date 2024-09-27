@@ -72,11 +72,7 @@ const Login: React.FC = () => {
     };
 
     return (
-        <Row
-            justify="center"
-            align="middle"
-            style={{ height: "100vh", background: "#f0f2f5" }}
-        >
+        <Row justify="center" align="middle">
             <Col>
                 <Card
                     style={{ width: 350, textAlign: "center" }}
