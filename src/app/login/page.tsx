@@ -20,10 +20,7 @@ const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
 
-    const handleLogin = async (values: {
-        username: string;
-        password: string;
-    }) => {
+    const handleLogin = async (values: { email: string; password: string }) => {
         setLoading(true);
         try {
             const response = await fetch("http://localhost:8080/auth/login", {
@@ -91,17 +88,17 @@ const Login: React.FC = () => {
                             layout="vertical"
                         >
                             <Form.Item
-                                name="username"
+                                name="email"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Por favor ingresa tu usuario",
+                                        message: "Por favor ingresa tu email",
                                     },
                                 ]}
                             >
                                 <Input
                                     prefix={<UserOutlined />}
-                                    placeholder="Usuario"
+                                    placeholder="Email"
                                     size="large"
                                 />
                             </Form.Item>
