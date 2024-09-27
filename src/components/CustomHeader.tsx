@@ -8,11 +8,8 @@ import React from "react";
 
 const { Header } = Layout;
 
-const CustomHeader = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    console.log(user);
-
+const CustomHeader = (params: { user: any }) => {
+    const { user } = params;
     const handleLogout = () => {
         localStorage.removeItem("user");
         // Refresca la página después de iniciar sesión
