@@ -34,6 +34,7 @@ const barData = [
     { month: "Mar", rendimiento: 8 },
     { month: "Abr", rendimiento: 18 },
     { month: "May", rendimiento: 25 },
+    { month: "Jun", rendimiento: 20 },
 ];
 
 const lineData = [
@@ -42,14 +43,22 @@ const lineData = [
     { month: "Mar", ganancias: 600 },
     { month: "Abr", ganancias: 1000 },
     { month: "May", ganancias: 1200 },
+    { month: "Jun", ganancias: 1500 },
+    { month: "Jul", ganancias: 1800 },
+    { month: "Ago", ganancias: 2000 },
+    { month: "Sep", ganancias: 2500 },
+    { month: "Oct", ganancias: 2800 },
+    { month: "Nov", ganancias: 2900 },
+    { month: "Dic", ganancias: 4000 },
 ];
 
 const pieData = [
-    { name: "Acciones", value: 60 },
-    { name: "Bonos", value: 40 },
+    { name: "Acciones", value: 50 },
+    { name: "Bonos", value: 30 },
+    { name: "Efectivo", value: 20 },
 ];
 
-const COLORS = ["#0088FE", "#FFBB28"]; // Colores para el gráfico de torta
+const COLORS = ["#0088FE", "#FFBB28", "#FF8042"]; // Colores para el gráfico de torta
 
 const DashboardPage = () => {
     const router = useRouter();
@@ -119,29 +128,9 @@ const DashboardPage = () => {
                             </BarChart>
                         </Card>
                     </Col>
-
-                    {/* Gráfico de tendencias (líneas) */}
-                    <Col span={12}>
-                        <Card title="Tendencia de Ganancias">
-                            <LineChart width={400} height={300} data={lineData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="month" />
-                                <YAxis />
-                                <Tooltip />
-                                <Line
-                                    type="monotone"
-                                    dataKey="ganancias"
-                                    stroke="#82ca9d"
-                                />
-                            </LineChart>
-                        </Card>
-                    </Col>
-                </Row>
-
-                <Row gutter={16} style={{ marginTop: "20px" }}>
                     {/* Gráfico de torta */}
                     <Col span={12}>
-                        <Card title="Diversificación de Inversiones">
+                        <Card title="Composicion de la cartera de ahorros">
                             <PieChart width={400} height={300}>
                                 <Pie
                                     data={pieData}
@@ -162,6 +151,29 @@ const DashboardPage = () => {
                                 </Pie>
                                 <Legend />
                             </PieChart>
+                        </Card>
+                    </Col>
+                </Row>
+
+                <Row gutter={16} style={{ marginTop: "20px" }}>
+                    {/* Gráfico de tendencias (líneas) */}
+                    <Col span={24}>
+                        <Card title="Ahorros acumulados por mes">
+                            <LineChart
+                                width={1000}
+                                height={300}
+                                data={lineData}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="month" />
+                                <YAxis />
+                                <Tooltip />
+                                <Line
+                                    type="monotone"
+                                    dataKey="ganancias"
+                                    stroke="#82ca9d"
+                                />
+                            </LineChart>
                         </Card>
                     </Col>
                 </Row>
