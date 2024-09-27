@@ -56,13 +56,19 @@ const MonthMetricsBoards = (params: {
     ];
 
     // Mapa para sumarizar las categorías con su color
-    const categoryMap = {};
+    const categoryMap: Record<string, { value: number; color: string }> = {};
 
     // Recorrer el array de gastos
     expenses.forEach((expense) => {
-        const categoryName = expense?.category.name;
-        const categoryColor = expense?.category.color;
-        const amount = expense.amount;
+        const categoryName =
+            expense.category && typeof expense.category === "object"
+                ? expense.category.name
+                : "Sin categoría";
+        const categoryColor =
+            expense.category && typeof expense.category === "object"
+                ? expense.category.color
+                : "#000";
+        const amount = expense.amount ?? 0;
 
         // Sumarizar el amount por categoría y guardar su color
         if (categoryMap[categoryName]) {
@@ -80,8 +86,6 @@ const MonthMetricsBoards = (params: {
             color,
         })
     );
-
-    console.log(pieData);
 
     return (
         <>
