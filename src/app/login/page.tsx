@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
     Form,
@@ -19,6 +19,14 @@ const { Title, Text } = Typography;
 const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
+
+    useEffect(() => {
+        // Verifica si hay un usuario en localStorage
+        const user = localStorage.getItem("user");
+        if (user) {
+            router.push("/"); // Redirige a la home si hay un usuario autenticado
+        }
+    }, [router]);
 
     const handleLogin = async (values: { email: string; password: string }) => {
         setLoading(true);
@@ -56,6 +64,8 @@ const Login: React.FC = () => {
 
             message.success("Usuario autenticado");
             router.push("/");
+            // Refresca la página después de iniciar sesión
+            window.location.reload();
         } catch (error) {
             console.error("Login failed", error);
             message.error("Error al iniciar sesión");

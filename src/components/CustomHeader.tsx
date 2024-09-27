@@ -19,6 +19,8 @@ const CustomHeader = () => {
         localStorage.removeItem("user");
         // Redirige al login después de cerrar sesión
         router.push("/login");
+        // Refresca la página después de iniciar sesión
+        window.location.reload();
     };
 
     const menu = (
