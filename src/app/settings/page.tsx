@@ -4,7 +4,12 @@ import React from "react";
 import { Typography, Button, Card, Row, Col, Avatar } from "antd";
 import { useRouter } from "next/navigation";
 import Authenticated from "../authenticated/page";
-import { NodeExpandOutlined, OrderedListOutlined } from "@ant-design/icons";
+import {
+    NodeExpandOutlined,
+    OrderedListOutlined,
+    QuestionCircleOutlined,
+    UserOutlined,
+} from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 
 const { Title, Paragraph } = Typography;
@@ -26,7 +31,7 @@ const Settings = () => {
                 </Paragraph>
 
                 <Row gutter={16}>
-                    <Col span={8}>
+                    <Col span={12}>
                         <Card
                             hoverable
                             onClick={() => handleGoToPage("/settings/category")}
@@ -41,7 +46,7 @@ const Settings = () => {
                             />
                         </Card>
                     </Col>
-                    <Col span={8}>
+                    <Col span={12}>
                         <Card
                             hoverable
                             onClick={() => handleGoToPage("/settings/status")}
@@ -53,6 +58,36 @@ const Settings = () => {
                                 }
                                 title="Estados"
                                 description="Gestiona los estados."
+                            />
+                        </Card>
+                    </Col>
+                </Row>
+                <Row gutter={16} style={{ marginTop: "20px" }}>
+                    <Col span={12}>
+                        <Card
+                            hoverable
+                            onClick={() => handleGoToPage("/settings/profile")}
+                            style={{ cursor: "pointer" }}
+                        >
+                            <Meta
+                                avatar={<Avatar icon={<UserOutlined />} />}
+                                title="Mi perfil"
+                                description="Configuración de mi perfil de usuario."
+                            />
+                        </Card>
+                    </Col>
+                    <Col span={12}>
+                        <Card
+                            hoverable
+                            onClick={() => handleGoToPage("/settings/faqs")}
+                            style={{ cursor: "pointer" }}
+                        >
+                            <Meta
+                                avatar={
+                                    <Avatar icon={<QuestionCircleOutlined />} />
+                                }
+                                title="FAQs"
+                                description="Documentación, consultas y contacto."
                             />
                         </Card>
                     </Col>
