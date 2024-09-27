@@ -22,6 +22,13 @@ const MonthMetricsBoards = (params: {
 }) => {
     const { incomes, expenses } = params;
 
+    //Contemplar que amount puede ser null
+    const filteredIncomes = incomes.filter((income) => income.amount !== null);
+    const totalIncomesAmount = filteredIncomes.reduce(
+        (acc, curr) => acc + curr.amount,
+        0
+    );
+
     const pieData = [
         { name: "Acciones", value: 60 },
         { name: "Bonos", value: 40 },
@@ -29,7 +36,7 @@ const MonthMetricsBoards = (params: {
 
     const barData = [
         { registro: "Gastos", rendimiento: 12 },
-        { registro: "Ingresos", rendimiento: 15 },
+        { registro: "Ingresos", rendimiento: totalIncomesAmount },
         { registro: "Ahorros", rendimiento: 8 },
     ];
 
@@ -39,7 +46,7 @@ const MonthMetricsBoards = (params: {
         <>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                 <Col className="gutter-row" span={8}>
-                    <IncomeStatisticCard data={incomes} />
+                    <IncomeStatisticCard totalAmount={totalIncomesAmount} />
                 </Col>
                 <Col className="gutter-row" span={8}>
                     <ExpenseStatisticCard data={expenses} />

@@ -3,15 +3,9 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import { Card, Statistic } from "antd";
 import React from "react";
 
-export const IncomeStatisticCard = (params: { data: IIncome[] }) => {
-    const { data } = params;
+export const IncomeStatisticCard = (params: { totalAmount: number }) => {
+    const { totalAmount } = params;
 
-    //Contemplar que amount puede ser null
-    const filteredData = data.filter((item) => item.amount !== null);
-    const totalAmount = filteredData.reduce(
-        (acc, curr) => acc + curr.amount,
-        0
-    );
     return (
         <Card bordered={false}>
             <Statistic
