@@ -1,6 +1,6 @@
 import { Card, Col, Row, Tooltip } from "antd";
 import React from "react";
-import { IncomeStatisticCard } from "../incomes/IncomeStatisticCard";
+import { StatisticCard } from "./StatisticCard";
 import { ExpenseStatisticCard } from "../expenses/ExpenseStatisticCard";
 import { MonthResultStatisticCard } from "../MonthResultStatisticCard";
 import { IExpense, IIncome } from "@/app/period/[period]/models";
@@ -15,6 +15,7 @@ import {
     XAxis,
     YAxis,
 } from "recharts";
+import { PlusCircleOutlined, WalletOutlined } from "@ant-design/icons";
 
 const MonthMetricsBoards = (params: {
     incomes: IIncome[];
@@ -34,7 +35,10 @@ const MonthMetricsBoards = (params: {
         0
     );
 
-    const monthFinalBalance = totalIncomesAmount - totalExpensesAmount;
+    const totalSavingsAmount = 0;
+
+    const monthFinalBalance =
+        totalIncomesAmount - totalExpensesAmount - totalSavingsAmount;
 
     const pieData = [
         { name: "Acciones", value: 60 },
@@ -44,7 +48,7 @@ const MonthMetricsBoards = (params: {
     const barData = [
         { registro: "Gastos", rendimiento: totalExpensesAmount },
         { registro: "Ingresos", rendimiento: totalIncomesAmount },
-        { registro: "Ahorros", rendimiento: 10000 },
+        { registro: "Ahorros", rendimiento: 0 },
     ];
 
     const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
@@ -52,13 +56,26 @@ const MonthMetricsBoards = (params: {
     return (
         <>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                <Col className="gutter-row" span={8}>
-                    <IncomeStatisticCard totalAmount={totalIncomesAmount} />
+                <Col className="gutter-row" span={6}>
+                    <StatisticCard
+                        title="Ingresos"
+                        color="#3f8600"
+                        iconElement={<PlusCircleOutlined />}
+                        totalAmount={totalIncomesAmount}
+                    />
                 </Col>
-                <Col className="gutter-row" span={8}>
+                <Col className="gutter-row" span={6}>
                     <ExpenseStatisticCard totalAmount={totalExpensesAmount} />
                 </Col>
-                <Col className="gutter-row" span={8}>
+                <Col className="gutter-row" span={6}>
+                    <StatisticCard
+                        title="Ahorros"
+                        color="#0088FE"
+                        iconElement={<WalletOutlined />}
+                        totalAmount={monthFinalBalance}
+                    />
+                </Col>
+                <Col className="gutter-row" span={6}>
                     <MonthResultStatisticCard
                         monthFinalBalance={monthFinalBalance}
                     />
