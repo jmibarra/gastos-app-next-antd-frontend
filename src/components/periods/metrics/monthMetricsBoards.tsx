@@ -1,4 +1,4 @@
-import { Card, Col, Row, Tooltip } from "antd";
+import { Card, Col, Row } from "antd";
 import React from "react";
 import { StatisticCard } from "./StatisticCard";
 import { MonthResultStatisticCard } from "../MonthResultStatisticCard";
@@ -13,6 +13,7 @@ import {
     PieChart,
     XAxis,
     YAxis,
+    Tooltip,
 } from "recharts";
 import {
     MinusCircleOutlined,
@@ -49,9 +50,12 @@ const MonthMetricsBoards = (params: {
     ];
 
     const barData = [
-        { registro: "Gastos", rendimiento: totalExpensesAmount },
-        { registro: "Ingresos", rendimiento: totalIncomesAmount },
-        { registro: "Ahorros", rendimiento: 0 },
+        {
+            registro: "Mes actual",
+            Gastos: totalExpensesAmount,
+            Ingresos: totalIncomesAmount,
+            Ahorros: totalSavingsAmount,
+        },
     ];
 
     const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
@@ -80,7 +84,7 @@ const MonthMetricsBoards = (params: {
                         title="Ahorros"
                         color="#0088FE"
                         iconElement={<WalletOutlined />}
-                        totalAmount={monthFinalBalance}
+                        totalAmount={totalSavingsAmount}
                     />
                 </Col>
                 <Col className="gutter-row" span={6}>
@@ -94,13 +98,16 @@ const MonthMetricsBoards = (params: {
                 style={{ marginTop: "20px" }}
             >
                 <Col span={12}>
-                    <Card title="Rendimiento por Mes">
+                    <Card title="Ingresos Gastos Ahorros">
                         <BarChart width={400} height={300} data={barData}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="registro" />
                             <YAxis />
                             <Tooltip />
-                            <Bar dataKey="rendimiento" fill={COLORS[0]} />
+                            <Legend />
+                            <Bar dataKey="Gastos" fill={"#cf1322"} />
+                            <Bar dataKey="Ingresos" fill={"#3f8600"} />
+                            <Bar dataKey="Ahorros" fill={"#0088FE"} />
                         </BarChart>
                     </Card>
                 </Col>
