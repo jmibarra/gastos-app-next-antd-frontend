@@ -5,20 +5,16 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Layout, Typography, Dropdown, Menu } from "antd";
 import React from "react";
-import { useRouter } from "next/navigation";
 
 const { Header } = Layout;
 
 const CustomHeader = () => {
-    const router = useRouter();
     const user = JSON.parse(localStorage.getItem("user"));
 
     console.log(user);
 
     const handleLogout = () => {
         localStorage.removeItem("user");
-        // Redirige al login después de cerrar sesión
-        router.push("/login");
         // Refresca la página después de iniciar sesión
         window.location.reload();
     };

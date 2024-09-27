@@ -26,16 +26,6 @@ const Sidebar = () => {
         }
     }, [isAuthenticated]);
 
-    const handleLogout = () => {
-        localStorage.removeItem("user");
-
-        // Mostramos el mensaje de confirmación
-        message.success("Se ha cerrado correctamente la sesión");
-
-        // Redirige al login después de cerrar sesión
-        router.push("/login");
-    };
-
     // Obtenemos el periodo actual en formato MMYYYY
     const currentPeriod = dayjs().format("MMYYYY");
 
@@ -52,9 +42,6 @@ const Sidebar = () => {
                 break;
             case "4":
                 router.push("/settings");
-                break;
-            case "5":
-                handleLogout();
                 break;
             default:
                 break;
@@ -90,11 +77,6 @@ const Sidebar = () => {
                                 key: "4",
                                 icon: <SettingOutlined />,
                                 label: "Configuración",
-                            },
-                            {
-                                key: "5",
-                                icon: <UnlockOutlined />,
-                                label: "Logout",
                             },
                         ]}
                     />
