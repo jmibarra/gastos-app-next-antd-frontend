@@ -1,7 +1,20 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Flex, Form, Input, Button, message, Row, Card } from "antd";
+import {
+    Form,
+    Input,
+    Button,
+    message,
+    Row,
+    Col,
+    Card,
+    Typography,
+    Space,
+} from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -11,6 +24,7 @@ const Login: React.FC = () => {
         username: string;
         password: string;
     }) => {
+        setLoading(true);
         try {
             const response = await fetch("http://localhost:8080/auth/login", {
                 method: "POST",
@@ -43,63 +57,102 @@ const Login: React.FC = () => {
                 })
             );
 
-            message.success("Usuario autenticado"); // Mostrar mensaje de éxito
-            console.log("Login successful");
+            message.success("Usuario autenticado");
             router.push("/");
         } catch (error) {
             console.error("Login failed", error);
-            console.error("Error:", error);
-            message.error("Error al iniciar sesión"); // Mostrar mensaje de error
+            message.error("Error al iniciar sesión");
         } finally {
             setLoading(false);
         }
     };
 
+    const handleRegister = () => {
+        router.push("/register"); // Asegúrate de que esta ruta exista
+    };
+
     return (
-        <Row justify="center">
-            <Card title="Iniciar Sesión" style={{ width: 300 }}>
-                <Flex gap="middle" wrap="wrap">
-                    <Form
-                        name="login-form"
-                        initialValues={{ remember: true }}
-                        onFinish={handleLogin}
+        <Row
+            justify="center"
+            align="middle"
+            style={{ height: "100vh", background: "#f0f2f5" }}
+        >
+            <Col>
+                <Card
+                    style={{ width: 350, textAlign: "center" }}
+                    bordered={false}
+                >
+                    <Space
+                        direction="vertical"
+                        size="large"
+                        style={{ width: "100%" }}
                     >
-                        <Form.Item
-                            name="email"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Por favor ingresa tu usuario",
-                                },
-                            ]}
+                        <Title level={3}>Iniciar Sesión</Title>
+                        <Form
+                            name="login-form"
+                            initialValues={{ remember: true }}
+                            onFinish={handleLogin}
+                            layout="vertical"
                         >
-                            <Input placeholder="Usuario" />
-                        </Form.Item>
-
-                        <Form.Item
-                            name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Por favor ingresa tu contraseña",
-                                },
-                            ]}
-                        >
-                            <Input.Password placeholder="Contraseña" />
-                        </Form.Item>
-
-                        <Form.Item>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                loading={loading}
+                            <Form.Item
+                                name="username"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Por favor ingresa tu usuario",
+                                    },
+                                ]}
                             >
-                                Iniciar Sesión
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Flex>
-            </Card>
+                                <Input
+                                    prefix={<UserOutlined />}
+                                    placeholder="Usuario"
+                                    size="large"
+                                />
+                            </Form.Item>
+
+                            <Form.Item
+                                name="password"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message:
+                                            "Por favor ingresa tu contraseña",
+                                    },
+                                ]}
+                            >
+                                <Input.Password
+                                    prefix={<LockOutlined />}
+                                    placeholder="Contraseña"
+                                    size="large"
+                                />
+                            </Form.Item>
+
+                            <Form.Item>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    loading={loading}
+                                    block
+                                    size="large"
+                                >
+                                    Iniciar Sesión
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                        <Space direction="vertical" size="small">
+                            <Text type="secondary">
+                                ¿No tienes una cuenta?{" "}
+                                <Button type="link" onClick={handleRegister}>
+                                    Regístrate
+                                </Button>
+                            </Text>
+                            <Text type="secondary">
+                                ¿Olvidaste tu contraseña?
+                            </Text>
+                        </Space>
+                    </Space>
+                </Card>
+            </Col>
         </Row>
     );
 };
