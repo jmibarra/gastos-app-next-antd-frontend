@@ -8,12 +8,23 @@ import {
     UnlockOutlined,
 } from "@ant-design/icons";
 import { Menu, message } from "antd"; // Importa message
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs"; // Usamos dayjs para el formato de fecha
 
 const Sidebar = () => {
     const router = useRouter();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        // Verifica si el usuario está autenticado buscando el token en localStorage
+        const user = localStorage.getItem("user");
+        if (user) {
+            setIsAuthenticated(true); // Usuario autenticado
+        } else {
+            setIsAuthenticated(false); // Usuario no autenticado
+        }
+    }, [isAuthenticated]);
 
     const handleLogout = () => {
         localStorage.removeItem("user");
@@ -52,46 +63,52 @@ const Sidebar = () => {
 
     return (
         <>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    padding: "20px",
-                }}
-            >
-                <div className="logo">
-                    <DollarOutlined style={{ fontSize: "32px" }} />
-                </div>
-            </div>
-            <Menu
-                mode="inline"
-                defaultSelectedKeys={["1"]}
-                className="menu-bar"
-                onClick={handleMenuClick} // Añadimos la función que maneja los clics
-                items={[
-                    {
-                        key: "1",
-                        icon: <DashboardOutlined />,
-                        label: "Dashboard",
-                    },
-                    {
-                        key: "2",
-                        icon: <ReconciliationOutlined />,
-                        label: "Periodos",
-                    },
-                    {
-                        key: "3",
-                        icon: <AreaChartOutlined />,
-                        label: "Inversiones",
-                    },
-                    {
-                        key: "4",
-                        icon: <SettingOutlined />,
-                        label: "Configuración",
-                    },
-                    { key: "5", icon: <UnlockOutlined />, label: "Logout" },
-                ]}
-            />
+            {isAuthenticated && ( // Solo muestra el menú si el usuario está autenticado
+                <>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            padding: "20px",
+                        }}
+                    >
+                        <DollarOutlined style={{ fontSize: "32px" }} />
+                    </div>
+                    <Menu
+                        mode="inline"
+                        defaultSelectedKeys={["1"]}
+                        className="menu-bar"
+                        onClick={handleMenuClick} // Añadimos la función que maneja los clics
+                        items={[
+                            {
+                                key: "1",
+                                icon: <DashboardOutlined />,
+                                label: "Dashboard",
+                            },
+                            {
+                                key: "2",
+                                icon: <ReconciliationOutlined />,
+                                label: "Periodos",
+                            },
+                            {
+                                key: "3",
+                                icon: <AreaChartOutlined />,
+                                label: "Inversiones",
+                            },
+                            {
+                                key: "4",
+                                icon: <SettingOutlined />,
+                                label: "Configuración",
+                            },
+                            {
+                                key: "5",
+                                icon: <UnlockOutlined />,
+                                label: "Logout",
+                            },
+                        ]}
+                    />
+                </>
+            )}
         </>
     );
 };
