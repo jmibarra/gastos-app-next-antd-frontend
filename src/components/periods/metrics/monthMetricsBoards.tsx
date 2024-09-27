@@ -29,13 +29,18 @@ const MonthMetricsBoards = (params: {
         0
     );
 
+    const totalExpensesAmount = expenses.reduce(
+        (acc, curr) => acc + curr.amount,
+        0
+    );
+
     const pieData = [
         { name: "Acciones", value: 60 },
         { name: "Bonos", value: 40 },
     ];
 
     const barData = [
-        { registro: "Gastos", rendimiento: 12 },
+        { registro: "Gastos", rendimiento: totalExpensesAmount },
         { registro: "Ingresos", rendimiento: totalIncomesAmount },
         { registro: "Ahorros", rendimiento: 8 },
     ];
@@ -49,7 +54,7 @@ const MonthMetricsBoards = (params: {
                     <IncomeStatisticCard totalAmount={totalIncomesAmount} />
                 </Col>
                 <Col className="gutter-row" span={8}>
-                    <ExpenseStatisticCard data={expenses} />
+                    <ExpenseStatisticCard totalAmount={totalExpensesAmount} />
                 </Col>
                 <Col className="gutter-row" span={8}>
                     <MonthResultStatisticCard
