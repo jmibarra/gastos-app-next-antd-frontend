@@ -27,6 +27,8 @@ const MonthMetricsBoards = (params: {
 }) => {
     const { incomes, expenses } = params;
 
+    console.log(expenses);
+
     //Contemplar que amount puede ser null
     const filteredIncomes = incomes.filter((income) => income.amount !== null);
     const totalIncomesAmount = filteredIncomes.reduce(
@@ -44,11 +46,6 @@ const MonthMetricsBoards = (params: {
     const monthFinalBalance =
         totalIncomesAmount - totalExpensesAmount - totalSavingsAmount;
 
-    const pieData = [
-        { name: "Acciones", value: 60 },
-        { name: "Bonos", value: 40 },
-    ];
-
     const barData = [
         {
             registro: "Mes actual",
@@ -58,7 +55,33 @@ const MonthMetricsBoards = (params: {
         },
     ];
 
-    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+    // Mapa para sumarizar las categorías con su color
+    const categoryMap = {};
+
+    // Recorrer el array de gastos
+    expenses.forEach((expense) => {
+        const categoryName = expense?.category.name;
+        const categoryColor = expense?.category.color;
+        const amount = expense.amount;
+
+        // Sumarizar el amount por categoría y guardar su color
+        if (categoryMap[categoryName]) {
+            categoryMap[categoryName].value += amount;
+        } else {
+            categoryMap[categoryName] = { value: amount, color: categoryColor };
+        }
+    });
+
+    // Convertir el mapa en el formato pieData
+    const pieData = Object.entries(categoryMap).map(
+        ([name, { value, color }]) => ({
+            name,
+            value,
+            color,
+        })
+    );
+
+    console.log(pieData);
 
     return (
         <>
@@ -126,7 +149,7 @@ const MonthMetricsBoards = (params: {
                                 {pieData.map((entry, index) => (
                                     <Cell
                                         key={`cell-${index}`}
-                                        fill={COLORS[index % COLORS.length]}
+                                        fill={entry.color}
                                         name={entry.name}
                                     />
                                 ))}
