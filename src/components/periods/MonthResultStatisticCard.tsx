@@ -5,37 +5,22 @@ import { Card, Statistic } from "antd";
 import React from "react";
 
 export const MonthResultStatisticCard = (params: {
-    incomes: IIncome[];
-    expenses: IExpense[];
+    monthFinalBalance: number;
 }) => {
-    const { incomes, expenses } = params;
-
-    const filteredIncomesData = incomes.filter((item) => item.amount !== null);
-
-    const totalIncomesAmount = filteredIncomesData.reduce(
-        (acc, curr) => (acc + curr.amount) as number,
-        0
-    );
-
-    const filteredExpensesData = expenses.filter(
-        (item) => item.amount !== null
-    );
-
-    const totalExpensesAmount = filteredExpensesData.reduce(
-        (acc, curr) => acc + curr.amount,
-        0
-    );
-
-    const totalAmount = totalIncomesAmount - totalExpensesAmount;
+    const { monthFinalBalance } = params;
 
     return (
         <Card bordered={false}>
             <Statistic
                 title="Saldo mensual"
-                value={totalAmount}
+                value={monthFinalBalance}
                 precision={2}
-                valueStyle={{ color: totalAmount > 0 ? "#3f8600" : "#cf1322" }}
-                prefix={totalAmount > 0 ? <RiseOutlined /> : <FallOutlined />}
+                valueStyle={{
+                    color: monthFinalBalance > 0 ? "#3f8600" : "#cf1322",
+                }}
+                prefix={
+                    monthFinalBalance > 0 ? <RiseOutlined /> : <FallOutlined />
+                }
                 suffix="$"
             />
         </Card>

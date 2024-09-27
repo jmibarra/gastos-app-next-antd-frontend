@@ -34,6 +34,8 @@ const MonthMetricsBoards = (params: {
         0
     );
 
+    const monthFinalBalance = totalIncomesAmount - totalExpensesAmount;
+
     const pieData = [
         { name: "Acciones", value: 60 },
         { name: "Bonos", value: 40 },
@@ -42,7 +44,7 @@ const MonthMetricsBoards = (params: {
     const barData = [
         { registro: "Gastos", rendimiento: totalExpensesAmount },
         { registro: "Ingresos", rendimiento: totalIncomesAmount },
-        { registro: "Ahorros", rendimiento: 8 },
+        { registro: "Ahorros", rendimiento: 10000 },
     ];
 
     const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
@@ -58,8 +60,7 @@ const MonthMetricsBoards = (params: {
                 </Col>
                 <Col className="gutter-row" span={8}>
                     <MonthResultStatisticCard
-                        incomes={incomes}
-                        expenses={expenses}
+                        monthFinalBalance={monthFinalBalance}
                     />
                 </Col>
             </Row>
