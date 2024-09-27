@@ -58,7 +58,6 @@ const EditProfile: React.FC = () => {
                 username: values.username,
             };
             localStorage.setItem("user", JSON.stringify(updatedUser));
-            //Acá realizaría el llamado a la api
 
             message.success("Perfil actualizado exitosamente");
             window.location.reload();
