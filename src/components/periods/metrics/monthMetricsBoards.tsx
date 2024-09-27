@@ -1,7 +1,6 @@
 import { Card, Col, Row, Tooltip } from "antd";
 import React from "react";
 import { StatisticCard } from "./StatisticCard";
-import { ExpenseStatisticCard } from "../expenses/ExpenseStatisticCard";
 import { MonthResultStatisticCard } from "../MonthResultStatisticCard";
 import { IExpense, IIncome } from "@/app/period/[period]/models";
 import {
@@ -15,7 +14,11 @@ import {
     XAxis,
     YAxis,
 } from "recharts";
-import { PlusCircleOutlined, WalletOutlined } from "@ant-design/icons";
+import {
+    MinusCircleOutlined,
+    PlusCircleOutlined,
+    WalletOutlined,
+} from "@ant-design/icons";
 
 const MonthMetricsBoards = (params: {
     incomes: IIncome[];
@@ -65,7 +68,12 @@ const MonthMetricsBoards = (params: {
                     />
                 </Col>
                 <Col className="gutter-row" span={6}>
-                    <ExpenseStatisticCard totalAmount={totalExpensesAmount} />
+                    <StatisticCard
+                        title="Gastos"
+                        color="#cf1322"
+                        iconElement={<MinusCircleOutlined />}
+                        totalAmount={totalExpensesAmount}
+                    />
                 </Col>
                 <Col className="gutter-row" span={6}>
                     <StatisticCard
