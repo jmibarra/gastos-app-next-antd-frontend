@@ -55,37 +55,46 @@ const MonthMetricsBoards = (params: {
         },
     ];
 
+    const pieData = getCategoryPieData();
+
     // Mapa para sumarizar las categorías con su color
-    const categoryMap: Record<string, { value: number; color: string }> = {};
+    function getCategoryPieData() {
+        const categoryMap: Record<string, { value: number; color: string }> =
+            {};
 
-    // Recorrer el array de gastos
-    expenses.forEach((expense) => {
-        const categoryName =
-            expense.category && typeof expense.category === "object"
-                ? expense.category.name
-                : "Sin categoría";
-        const categoryColor =
-            expense.category && typeof expense.category === "object"
-                ? expense.category.color
-                : "#000";
-        const amount = expense.amount ?? 0;
+        // Recorrer el array de gastos
+        expenses.forEach((expense) => {
+            const categoryName =
+                expense.category && typeof expense.category === "object"
+                    ? expense.category.name
+                    : "Sin categoría";
+            const categoryColor =
+                expense.category && typeof expense.category === "object"
+                    ? expense.category.color
+                    : "#000";
+            const amount = expense.amount ?? 0;
 
-        // Sumarizar el amount por categoría y guardar su color
-        if (categoryMap[categoryName]) {
-            categoryMap[categoryName].value += amount;
-        } else {
-            categoryMap[categoryName] = { value: amount, color: categoryColor };
-        }
-    });
+            // Sumarizar el amount por categoría y guardar su color
+            if (categoryMap[categoryName]) {
+                categoryMap[categoryName].value += amount;
+            } else {
+                categoryMap[categoryName] = {
+                    value: amount,
+                    color: categoryColor,
+                };
+            }
+        });
 
-    // Convertir el mapa en el formato pieData
-    const pieData = Object.entries(categoryMap).map(
-        ([name, { value, color }]) => ({
-            name,
-            value,
-            color,
-        })
-    );
+        // Convertir el mapa en el formato pieData
+        const pieData = Object.entries(categoryMap).map(
+            ([name, { value, color }]) => ({
+                name,
+                value,
+                color,
+            })
+        );
+        return pieData;
+    }
 
     return (
         <>
