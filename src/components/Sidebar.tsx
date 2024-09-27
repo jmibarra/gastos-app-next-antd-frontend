@@ -65,15 +65,6 @@ const Sidebar = () => {
         <>
             {isAuthenticated && ( // Solo muestra el menú si el usuario está autenticado
                 <>
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            padding: "20px",
-                        }}
-                    >
-                        <DollarOutlined style={{ fontSize: "32px" }} />
-                    </div>
                     <Menu
                         mode="inline"
                         defaultSelectedKeys={["1"]}

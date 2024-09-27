@@ -6,6 +6,7 @@ import { Layout, Button } from "antd";
 import Sider from "antd/es/layout/Sider";
 import React, { useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import CustomHeader from "../CustomHeader";
 
 const { Header, Content } = Layout;
 
@@ -15,9 +16,7 @@ const MainLayoutContainer = (props: any) => {
 
     return (
         <Layout>
-            <Header>
-                <div className="demo-logo" />
-            </Header>
+            <CustomHeader />
             <Layout>
                 <Sider
                     className="sider"
