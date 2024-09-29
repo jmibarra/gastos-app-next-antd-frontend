@@ -36,12 +36,21 @@ const MonthMetricsBoards = (params: {
         0
     );
 
-    const totalExpensesAmount = expenses.reduce(
+    const filteredExpenses = expenses.filter(
+        (expense) => expense.category && expense.category?.name !== "Ahorros"
+    );
+    const totalExpensesAmount = filteredExpenses.reduce(
         (acc, curr) => acc + (curr.amount ?? 0),
         0
     );
 
-    const totalSavingsAmount = 0;
+    const filteredSavings = expenses.filter(
+        (expense) => expense.category && expense.category?.name === "Ahorros"
+    );
+    const totalSavingsAmount = filteredSavings.reduce(
+        (acc, curr) => acc + (curr.amount ?? 0),
+        0
+    );
 
     const monthFinalBalance =
         totalIncomesAmount - totalExpensesAmount - totalSavingsAmount;
