@@ -2,7 +2,7 @@ import { Card, Col, Row } from "antd";
 import React from "react";
 import { StatisticCard } from "./StatisticCard";
 import { MonthResultStatisticCard } from "../MonthResultStatisticCard";
-import { IExpense, IIncome } from "@/app/period/[period]/models";
+import { IExpense, IIncome, ISaving } from "@/app/period/[period]/models";
 import {
     Bar,
     BarChart,
@@ -24,8 +24,9 @@ import {
 const MonthMetricsBoards = (params: {
     incomes: IIncome[];
     expenses: IExpense[];
+    savings: ISaving[];
 }) => {
-    const { incomes, expenses } = params;
+    const { incomes, expenses, savings } = params;
 
     console.log(expenses);
 
@@ -36,21 +37,29 @@ const MonthMetricsBoards = (params: {
         0
     );
 
-    const filteredExpenses = expenses.filter(
-        (expense) => expense.category && expense.category?.name !== "Ahorros"
-    );
-    const totalExpensesAmount = filteredExpenses.reduce(
+    const totalExpensesAmount = expenses.reduce(
         (acc, curr) => acc + (curr.amount ?? 0),
         0
     );
 
-    const filteredSavings = expenses.filter(
-        (expense) => expense.category && expense.category?.name === "Ahorros"
+    const incomingSavings = savings.filter(
+        (saving) => saving.type === "Ingreso"
     );
-    const totalSavingsAmount = filteredSavings.reduce(
+    const totalIncomingSavingsAmount = incomingSavings.reduce(
         (acc, curr) => acc + (curr.amount ?? 0),
         0
     );
+    const outgoingSavings = savings.filter(
+        (saving) => saving.type === "Egreso"
+    );
+
+    const totalOutgoingSavingsAmount = outgoingSavings.reduce(
+        (acc, curr) => acc + (curr.amount ?? 0),
+        0
+    );
+
+    const totalSavingsAmount =
+        totalIncomingSavingsAmount - totalOutgoingSavingsAmount;
 
     const monthFinalBalance =
         totalIncomesAmount - totalExpensesAmount - totalSavingsAmount;

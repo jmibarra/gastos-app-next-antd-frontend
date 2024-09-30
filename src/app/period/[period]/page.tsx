@@ -6,17 +6,23 @@ import Authenticated from "../../authenticated/page";
 import { Button, Col, DatePicker, Divider, Row } from "antd";
 import ExpenseTable from "@/components/periods/expenses/ExpensesTable";
 import IncomeTable from "@/components/periods/incomes/IncomeTable";
+import SavingsTable from "@/components/periods/savings/savingsTable";
 import { IExpense } from "./models/expense.model";
 import { IIncome } from "./models/income.model";
-import { getExpensesByPeriod, getIncomesByPeriod } from "./services";
+import { ISaving } from "./models";
+import {
+    getExpensesByPeriod,
+    getIncomesByPeriod,
+    getSavingsByPeriod,
+} from "./services";
 import MonthMetricsBoards from "@/components/periods/metrics/monthMetricsBoards";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import SavingsTable from "@/components/periods/savings/savingsTable";
 
 export default function Period({ params }: { params: { period: string } }) {
     const [period, setPeriod] = useState(params.period);
     const [expenses, setExpenses] = useState<IExpense[]>([]);
     const [incomes, setIncomes] = useState<IIncome[]>([]);
+    const [savings, setSavings] = useState<ISaving[]>([]);
     const [authToken, setAuthToken] = useState<string>("");
 
     useEffect(() => {
@@ -45,6 +51,15 @@ export default function Period({ params }: { params: { period: string } }) {
         };
 
         fetchIncomes();
+    }, [period, authToken]);
+
+    useEffect(() => {
+        const fetchSavings = async () => {
+            const fetchedSavings = await getSavingsByPeriod(period, authToken);
+            setSavings(fetchedSavings);
+        };
+
+        fetchSavings();
     }, [period, authToken]);
 
     const handlePeriodChange = (date: any, dateString: string | string[]) => {
@@ -84,7 +99,11 @@ export default function Period({ params }: { params: { period: string } }) {
                 <Button icon={<RightOutlined />} onClick={handleNextPeriod} />
             </Row>
             <Divider orientation="left">Datos del mes</Divider>
-            <MonthMetricsBoards incomes={incomes} expenses={expenses} />
+            <MonthMetricsBoards
+                incomes={incomes}
+                expenses={expenses}
+                savings={savings}
+            />
             <Divider orientation="left">Ingresos</Divider>
             <Row>
                 <Col span={24}>
@@ -107,10 +126,15 @@ export default function Period({ params }: { params: { period: string } }) {
                     />
                 </Col>
             </Row>
-            <Divider orientation="left">Gastos</Divider>
+            <Divider orientation="left">Ahorros del mes</Divider>
             <Row>
                 <Col span={24}>
-                    <SavingsTable />
+                    <SavingsTable
+                        savings={savings}
+                        updateSavings={setSavings}
+                        period={period}
+                        authToken={authToken}
+                    />
                 </Col>
             </Row>
         </Authenticated>
