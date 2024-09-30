@@ -17,6 +17,22 @@ export const getExpensesByPeriod = async (period: string, authToken: string): Pr
     else return [];
 };
 
+export const getExpensesByCategory = async (category: string, authToken: string): Promise<IExpense[]> => {
+    const url = "http://localhost:8080/expenses/category/";
+    const urlWithCategory = url + category;
+
+    const response = await fetch(urlWithCategory, {
+        method: "GET",
+        headers: {
+            Authorization: authToken,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (response.ok) return response.json().then((data) => data.expenses);
+    else return [];
+}
+
 export const deleteExpenseById = async (id: string, authToken: string) => {
     const url = `http://localhost:8080/expenses/${id}`;
 

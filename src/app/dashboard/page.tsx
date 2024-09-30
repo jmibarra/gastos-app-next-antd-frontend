@@ -1,6 +1,6 @@
 // src/app/investments/page.tsx
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Button, Card, Row, Col } from "antd";
 import { useRouter } from "next/navigation";
 import Authenticated from "../authenticated/page";
@@ -24,18 +24,9 @@ import {
     PieChartOutlined,
     BarChartOutlined,
 } from "@ant-design/icons";
+import { getExpensesByCategory } from "../period/[period]/services";
 
 const { Title, Paragraph } = Typography;
-
-// Datos ficticios para los gráficos
-const barData = [
-    { month: "Ene", rendimiento: 12 },
-    { month: "Feb", rendimiento: 15 },
-    { month: "Mar", rendimiento: 8 },
-    { month: "Abr", rendimiento: 18 },
-    { month: "May", rendimiento: 25 },
-    { month: "Jun", rendimiento: 20 },
-];
 
 const lineData = [
     { month: "Ene", ganancias: 500 },
@@ -62,10 +53,57 @@ const COLORS = ["#0088FE", "#FFBB28", "#FF8042"]; // Colores para el gráfico de
 
 const DashboardPage = () => {
     const router = useRouter();
+    const [authToken, setAuthToken] = useState<string>("");
+    const [savingsData, setSavingsData] = useState([]);
 
     const handleGoBack = () => {
         router.push("/"); // Redirige al inicio
     };
+
+    useEffect(() => {
+        // Esto solo se ejecutará en el cliente
+        const parsedUserData = localStorage.getItem("user");
+        const user = parsedUserData ? JSON.parse(parsedUserData) : null;
+        const token = user ? user.token : null;
+        setAuthToken(token);
+    }, []);
+
+    // Función para obtener los ahorros del servicio y procesarlos
+    const fetchSavingsData = async () => {
+        try {
+            const expenses = await getExpensesByCategory(
+                "66f8a860b487b4336c5f9fbd",
+                authToken
+            ); // Trae los gastos de categoría "Ahorros"
+
+            console.log(expenses);
+
+            // Agrupar los ahorros por periodo (month)
+            const groupedData = expenses.reduce((acc, curr) => {
+                const month = curr.period; // Usa el periodo como el mes
+                const amount = curr.amount ?? 0;
+
+                // Sumarizar por mes
+                if (acc[month]) {
+                    acc[month].savings += amount;
+                } else {
+                    acc[month] = { month, savings: amount };
+                }
+
+                return acc;
+            }, {});
+
+            // Convertir el objeto agrupado en un array para el gráfico
+            const formattedData = Object.values(groupedData);
+            setSavingsData(formattedData);
+        } catch (error) {
+            console.error("Error al traer los ahorros:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchSavingsData(); // Llamada al servicio cuando se carga el componente
+    }, [authToken]);
 
     return (
         <Authenticated>
@@ -118,13 +156,17 @@ const DashboardPage = () => {
                 <Row gutter={24} style={{ marginTop: "20px" }}>
                     {/* Gráfico de barras */}
                     <Col span={12}>
-                        <Card title="Rendimiento por Mes">
-                            <BarChart width={400} height={300} data={barData}>
+                        <Card title="Ahorros por mes">
+                            <BarChart
+                                width={400}
+                                height={300}
+                                data={savingsData}
+                            >
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="month" />
                                 <YAxis />
                                 <Tooltip />
-                                <Bar dataKey="rendimiento" fill="#8884d8" />
+                                <Bar dataKey="savings" fill="#8884d8" />
                             </BarChart>
                         </Card>
                     </Col>
