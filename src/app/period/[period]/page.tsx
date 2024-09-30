@@ -3,13 +3,14 @@ import dayjs from "dayjs";
 
 import { useEffect, useState } from "react";
 import Authenticated from "../../authenticated/page";
-import { Col, DatePicker, Divider, Row } from "antd";
+import { Button, Col, DatePicker, Divider, Row } from "antd";
 import ExpenseTable from "@/components/periods/expenses/ExpensesTable";
 import IncomeTable from "@/components/periods/incomes/IncomeTable";
 import { IExpense } from "./models/expense.model";
 import { IIncome } from "./models/income.model";
 import { getExpensesByPeriod, getIncomesByPeriod } from "./services";
 import MonthMetricsBoards from "@/components/periods/metrics/monthMetricsBoards";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 export default function Period({ params }: { params: { period: string } }) {
     const [period, setPeriod] = useState(params.period);
@@ -49,16 +50,38 @@ export default function Period({ params }: { params: { period: string } }) {
         setPeriod(typeof dateString === "string" ? dateString : dateString[0]);
     };
 
+    const handlePreviousPeriod = () => {
+        const newPeriod = dayjs(period, "MMYYYY")
+            .subtract(1, "month")
+            .format("MMYYYY");
+        setPeriod(newPeriod);
+    };
+
+    const handleNextPeriod = () => {
+        const newPeriod = dayjs(period, "MMYYYY")
+            .add(1, "month")
+            .format("MMYYYY");
+        setPeriod(newPeriod);
+    };
+
     return (
         <Authenticated>
             <h1>Periodo {period} </h1>
             <Divider orientation="left">Periodo</Divider>
-            <DatePicker
-                onChange={handlePeriodChange}
-                picker="month"
-                format={"MMYYYY"}
-                value={dayjs(period, "MMYYYY")}
-            />
+            <Row align="middle" justify="center">
+                <Button
+                    icon={<LeftOutlined />}
+                    onClick={handlePreviousPeriod}
+                />
+                <DatePicker
+                    onChange={handlePeriodChange}
+                    picker="month"
+                    format={"MMYYYY"}
+                    value={dayjs(period, "MMYYYY")}
+                    style={{ margin: "0 10px" }}
+                />
+                <Button icon={<RightOutlined />} onClick={handleNextPeriod} />
+            </Row>
             <Divider orientation="left">Datos del mes</Divider>
             <MonthMetricsBoards incomes={incomes} expenses={expenses} />
             <Divider orientation="left">Ingresos</Divider>
