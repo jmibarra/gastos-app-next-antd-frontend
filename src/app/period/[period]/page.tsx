@@ -11,6 +11,7 @@ import { IIncome } from "./models/income.model";
 import { getExpensesByPeriod, getIncomesByPeriod } from "./services";
 import MonthMetricsBoards from "@/components/periods/metrics/monthMetricsBoards";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import SavingsTable from "@/components/periods/savings/savingsTable";
 
 export default function Period({ params }: { params: { period: string } }) {
     const [period, setPeriod] = useState(params.period);
@@ -104,6 +105,12 @@ export default function Period({ params }: { params: { period: string } }) {
                         period={period}
                         authToken={authToken}
                     />
+                </Col>
+            </Row>
+            <Divider orientation="left">Gastos</Divider>
+            <Row>
+                <Col span={24}>
+                    <SavingsTable />
                 </Col>
             </Row>
         </Authenticated>

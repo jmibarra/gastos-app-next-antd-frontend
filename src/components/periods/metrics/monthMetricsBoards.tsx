@@ -132,22 +132,6 @@ const MonthMetricsBoards = (params: {
         return pieData;
     }
 
-    const CustomTooltip = ({ active, payload, label }) => {
-        if (active && payload && payload.length) {
-            return (
-                <div className="custom-tooltip">
-                    <p className="label">{`${label} : ${payload[0].value}`}</p>
-                    <p className="intro">Lalal</p>
-                    <p className="desc">
-                        Anything you want can be displayed here.
-                    </p>
-                </div>
-            );
-        }
-
-        return null;
-    };
-
     return (
         <>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
