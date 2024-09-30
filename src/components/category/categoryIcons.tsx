@@ -10,6 +10,7 @@ import {
     SkinOutlined,
     FileUnknownOutlined,
     WalletOutlined,
+    TeamOutlined,
 } from "@ant-design/icons";
 
 export const CategoryIcons: React.FC<{ category: string | undefined }> = ({
@@ -25,6 +26,7 @@ export const CategoryIcons: React.FC<{ category: string | undefined }> = ({
         Supermercado: <ShoppingCartOutlined />,
         Ropa: <SkinOutlined />,
         Ahorros: <WalletOutlined />,
+        Familia: <TeamOutlined />,
     };
 
     if (!category) {
