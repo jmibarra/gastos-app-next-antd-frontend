@@ -66,6 +66,33 @@ const MonthMetricsBoards = (params: {
 
     const pieData = getCategoryPieData();
 
+    const RADIAN = Math.PI / 180;
+    const renderCustomizedLabel = ({
+        cx,
+        cy,
+        midAngle,
+        innerRadius,
+        outerRadius,
+        percent,
+        index,
+    }) => {
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text
+                x={x}
+                y={y}
+                fill="white"
+                textAnchor={x > cx ? "start" : "end"}
+                dominantBaseline="central"
+            >
+                {`${(percent * 100).toFixed(0)}%`}
+            </text>
+        );
+    };
+
     // Mapa para sumarizar las categorías con su color
     function getCategoryPieData() {
         const categoryMap: Record<string, { value: number; color: string }> =
@@ -104,6 +131,22 @@ const MonthMetricsBoards = (params: {
         );
         return pieData;
     }
+
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="custom-tooltip">
+                    <p className="label">{`${label} : ${payload[0].value}`}</p>
+                    <p className="intro">Lalal</p>
+                    <p className="desc">
+                        Anything you want can be displayed here.
+                    </p>
+                </div>
+            );
+        }
+
+        return null;
+    };
 
     return (
         <>
@@ -144,7 +187,7 @@ const MonthMetricsBoards = (params: {
             >
                 <Col span={12}>
                     <Card title="Ingresos Gastos Ahorros">
-                        <BarChart width={400} height={300} data={barData}>
+                        <BarChart width={500} height={300} data={barData}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="registro" />
                             <YAxis />
@@ -158,15 +201,19 @@ const MonthMetricsBoards = (params: {
                 </Col>
                 <Col span={12}>
                     <Card title="Categorias de gastos">
-                        <PieChart width={400} height={300}>
+                        <PieChart
+                            width={500}
+                            height={300}
+                            style={{ marginLeft: "auto", marginRight: "auto" }}
+                        >
                             <Pie
                                 data={pieData}
-                                cx={200}
-                                cy={150}
-                                outerRadius={80}
-                                fill="#8884d8"
+                                cx={250}
+                                cy={115}
+                                outerRadius={120}
                                 dataKey="value"
-                                label
+                                labelLine={false}
+                                label={renderCustomizedLabel}
                             >
                                 {pieData.map((entry, index) => (
                                     <Cell
