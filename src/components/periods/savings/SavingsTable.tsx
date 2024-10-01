@@ -75,7 +75,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         if (editing) {
             if (title === "Estado") {
                 selectRef.current?.focus();
-            } else if (title === "Fecha de ingreso") {
+            } else if (title === "Fecha de movimiento") {
                 dateRef.current?.focus();
             } else {
                 inputRef.current?.focus();
@@ -167,7 +167,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         );
     }
 
-    if (editable && title == "Fecha de ingreso") {
+    if (editable && title == "Fecha de movimiento") {
         childNode = editing ? (
             <Form.Item name="date">
                 <Input

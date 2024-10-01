@@ -1,10 +1,25 @@
 import { ISaving } from "../models";
 
 export const getSavingsByPeriod = async (period: string, authToken: string): Promise<ISaving[]> => {
-    const url = "http://localhost:8080/savings/";
+    const url = "http://localhost:8080/savings/period/";
     const urlWithPeriod = url + period;
 
     const response = await fetch(urlWithPeriod, {
+        method: "GET",
+        headers: {
+            Authorization: authToken,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (response.ok) return response.json().then((data) => data.savings);
+    else return [];
+}
+
+export const getAllSavings = async (authToken: string): Promise<ISaving[]> => {
+    const url = "http://localhost:8080/savings/all";
+
+    const response = await fetch(url, {
         method: "GET",
         headers: {
             Authorization: authToken,
@@ -57,19 +72,4 @@ export const deleteSavingById = async (id: string, authToken: string) => {
             "Content-Type": "application/json",
         },
     });
-}
-
-export const getAllSavings = async (authToken: string) => {
-    const url = "http://localhost:8080/savings/all";
-
-    const response = await fetch(url, {
-        method: "GET",
-        headers: {
-            Authorization: authToken,
-            "Content-Type": "application/json",
-        },
-    });
-
-    if (response.ok) return response.json().then((data) => data.savings);
-    else return [];
 }

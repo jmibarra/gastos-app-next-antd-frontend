@@ -24,7 +24,8 @@ import {
     PieChartOutlined,
     BarChartOutlined,
 } from "@ant-design/icons";
-import { getExpensesByCategory } from "../period/[period]/services";
+import { getAllSavings } from "../period/[period]/services";
+import { ISaving } from "../period/[period]/models";
 
 const { Title, Paragraph } = Typography;
 
@@ -54,7 +55,7 @@ const COLORS = ["#0088FE", "#FFBB28", "#FF8042"]; // Colores para el gráfico de
 const DashboardPage = () => {
     const router = useRouter();
     const [authToken, setAuthToken] = useState<string>("");
-    const [savingsData, setSavingsData] = useState([]);
+    const [savingsData, setSavingsData] = useState<ISaving[]>([]);
 
     const handleGoBack = () => {
         router.push("/"); // Redirige al inicio
@@ -71,30 +72,61 @@ const DashboardPage = () => {
     // Función para obtener los ahorros del servicio y procesarlos
     const fetchSavingsData = async () => {
         try {
-            const expenses = await getExpensesByCategory(
-                "66f8a860b487b4336c5f9fbd",
-                authToken
-            ); // Trae los gastos de categoría "Ahorros"
+            const savings = await getAllSavings(authToken);
 
-            console.log(expenses);
+            console.log(savings);
 
-            // Agrupar los ahorros por periodo (month)
-            const groupedData = expenses.reduce((acc, curr) => {
-                const month = curr.period; // Usa el periodo como el mes
-                const amount = curr.amount ?? 0;
+            // Obtener el año actual
+            const currentYear = new Date().getFullYear();
 
-                // Sumarizar por mes
-                if (acc[month]) {
-                    acc[month].savings += amount;
-                } else {
-                    acc[month] = { month, savings: amount };
-                }
-
+            // Crear un mapa inicial con los periodos del año actual (Ene-Dic)
+            const monthNames = [
+                "Ene",
+                "Feb",
+                "Mar",
+                "Abr",
+                "May",
+                "Jun",
+                "Jul",
+                "Ago",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dic",
+            ];
+            const initialData = monthNames.reduce((acc, month, index) => {
+                const periodKey = `${month}`;
+                acc[periodKey] = { month: periodKey, savings: 0 }; // Iniciar cada mes con 0 ahorros
                 return acc;
             }, {});
 
-            // Convertir el objeto agrupado en un array para el gráfico
+            // Agrupar los ahorros por periodo (month) y sumar/restar según el tipo
+            const groupedData = savings.reduce((acc, curr) => {
+                const periodStr = curr.period; // Formato: "MMYYYY" (Ej: "012024", "122024")
+                const month = parseInt(periodStr.slice(0, 2), 10); // Mes como número
+                const year = parseInt(periodStr.slice(2), 10); // Año
+
+                const amount = curr.amount ?? 0;
+                const type = curr.type; // Se asume que el campo "type" es "Ingreso" o "Egreso"
+
+                // Verificar si el ahorro es del año actual
+                if (year === currentYear && month >= 1 && month <= 12) {
+                    const periodKey = `${monthNames[month - 1]}`; // Formato "Ene 2024", "Feb 2024", etc.
+
+                    // Sumar o restar según el tipo
+                    if (type === "Ingreso") {
+                        acc[periodKey].savings += amount;
+                    } else if (type === "Egreso") {
+                        acc[periodKey].savings -= amount;
+                    }
+                }
+
+                return acc;
+            }, initialData);
+
+            // Convertir el objeto agrupado en un array ordenado para el gráfico
             const formattedData = Object.values(groupedData);
+
             setSavingsData(formattedData);
         } catch (error) {
             console.error("Error al traer los ahorros:", error);
