@@ -332,7 +332,7 @@ const ExpenseTable = (params: {
         const newData: IExpense = {
             _id: "1",
             title: `Nuevo Gasto`,
-            dueDate: "2024-02-20T20:19:40.723Z",
+            dueDate: dayjs().startOf("day").toDate().toISOString(),
             status: "6553fe526562128ac0dd6f6e",
             amount: 1,
             period: params.period, //Paso el periodo o alcanza con copiar a sus hermanos?

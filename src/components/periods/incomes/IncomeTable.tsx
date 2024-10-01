@@ -273,7 +273,7 @@ const IncomeTable = (params: {
         const newData: IIncome = {
             _id: "1",
             title: `Nuevo Ingreso`,
-            date: "2024-02-20T20:19:40.723Z",
+            date: dayjs().startOf("day").toDate().toISOString(),
             status: "6553fe526562128ac0dd6f6e",
             amount: 1,
             period: params.period,

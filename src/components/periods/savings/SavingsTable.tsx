@@ -107,7 +107,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
             );
 
             response.then((updatedRecord: ISaving) => {
-                console.log(updatedRecord);
                 handleSave(updatedRecord);
             });
         } catch (errInfo) {
@@ -264,7 +263,7 @@ const SavingsTable = (params: {
         const newData: ISaving = {
             _id: "1",
             description: `Ahorro`,
-            date: "2024-02-20T20:19:40.723Z",
+            date: dayjs().startOf("day").toDate().toISOString(),
             amount: 1,
             type: "Ingreso",
             period: params.period,
