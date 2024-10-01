@@ -115,7 +115,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     };
 
     let childNode = children;
-    if (editable && title !== "Estado" && title !== "Fecha de ingreso") {
+    if (editable && title !== "Fecha de movimiento") {
         childNode = editing ? (
             <Form.Item
                 style={{ margin: 0 }}
@@ -140,25 +140,20 @@ const EditableCell: React.FC<EditableCellProps> = ({
         );
     }
 
-    if (editable && title == "Estado") {
+    if (editable && title == "Tipo de operación") {
         childNode = editing ? (
             <Form.Item
-                name="status"
+                name="type"
                 rules={[
                     {
                         required: true,
-                        message: "Por favor seleccione un estado.",
+                        message: "Por favor seleccione un tipo de operación.",
                     },
                 ]}
             >
-                {/* Deberia dinamizar esto trayendome las opciones desde la api */}
                 <Select ref={selectRef} onBlur={save}>
-                    <Option value="65d0fb6db33cebd95694e233">Estimado</Option>
-                    <Option value="6553fe526562128ac0dd6f6e">Pendiente</Option>
-                    <Option value="65d0fb82b33cebd95694e234">
-                        Transferido
-                    </Option>
-                    <Option value="6553fd74df59e3f9af341a03">Pago</Option>
+                    <Option value="Ingreso">Ingreso</Option>
+                    <Option value="Egreso">Egreso</Option>
                 </Select>
             </Form.Item>
         ) : (
@@ -226,7 +221,7 @@ const SavingsTable = (params: {
             editable: true,
         },
         {
-            title: "Fecha de ingreso",
+            title: "Fecha de movimiento",
             dataIndex: "date",
             editable: true,
             render: (value) => dayjs(value).format(dateFormat),
