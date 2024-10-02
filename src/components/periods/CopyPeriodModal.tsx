@@ -28,10 +28,10 @@ const CopyPeriodModal = (params: {
                 values.destinationPeriod.format("MMYYYY"),
                 authToken
             );
-            setIsModalVisible(false); // Oculta el modal al copiar
         } catch (error) {
             console.log(error);
         } finally {
+            setIsModalVisible(false);
             setIsCopying(false);
         }
     };
