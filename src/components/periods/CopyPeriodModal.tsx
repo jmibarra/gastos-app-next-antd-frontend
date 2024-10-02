@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
-import { Button, DatePicker, Row, Modal, Form } from "antd";
+import { Button, DatePicker, Row, Modal, Form, Popconfirm } from "antd";
 import { copyPeriodData } from "@/app/period/[period]/services/common.services";
 
 const CopyPeriodModal = (params: {
@@ -77,15 +77,21 @@ const CopyPeriodModal = (params: {
                     <Button type="link" onClick={handleCancel}>
                         Cancelar
                     </Button>
-                    <Button
-                        type="primary"
-                        danger
-                        onClick={handleCopy}
-                        loading={isCopying}
-                        style={{ marginLeft: 10 }}
+                    <Popconfirm
+                        title="¿Estás seguro de que quieres copiar los datos del periodo?"
+                        onConfirm={handleCopy} // Ejecuta la acción al confirmar
+                        okText="Sí"
+                        cancelText="No"
                     >
-                        {isCopying ? null : "Copiar"}
-                    </Button>
+                        <Button
+                            type="primary"
+                            danger
+                            loading={isCopying}
+                            style={{ marginLeft: 10 }}
+                        >
+                            {isCopying ? null : "Copiar"}
+                        </Button>
+                    </Popconfirm>
                 </Row>
             </Form>
         </Modal>
