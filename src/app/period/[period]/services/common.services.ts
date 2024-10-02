@@ -12,7 +12,7 @@ export const copyPeriodData = async (originPeriod: string, destinationPeriod: st
         periodExpenses.forEach(async (expense) => {
             expense.period = destinationPeriod;
             expense.status = "65d0fb6db33cebd95694e233";
-            createExpense(expense, authToken);
+            await createExpense(expense, authToken);
         });
     }
 
@@ -20,7 +20,7 @@ export const copyPeriodData = async (originPeriod: string, destinationPeriod: st
         periodIncomes.forEach(async (income: IIncome) => {
             income.period = destinationPeriod;
             income.status = "65d0fb6db33cebd95694e233";
-            createIncome(income, authToken);
+            await createIncome(income, authToken);
         });
     }
 };

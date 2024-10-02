@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
-import { Button, DatePicker, Row, Modal, Form, Popconfirm } from "antd";
+import {
+    Button,
+    DatePicker,
+    Row,
+    Modal,
+    Form,
+    Popconfirm,
+    message,
+} from "antd";
 import { copyPeriodData } from "@/app/period/[period]/services/common.services";
 
 const CopyPeriodModal = (params: {
@@ -14,6 +22,7 @@ const CopyPeriodModal = (params: {
         params;
 
     const [form] = Form.useForm(); // Formulario de Ant Design
+
     const handleCancel = () => {
         setIsModalVisible(false); // Oculta el modal al cancelar
     };
@@ -21,18 +30,24 @@ const CopyPeriodModal = (params: {
     const handleCopy = async () => {
         try {
             const values = await form.validateFields();
-            setIsCopying(true);
+            setIsCopying(true); // Activamos el estado de carga
 
-            copyPeriodData(
+            // Llamada al servicio para copiar los datos
+            await copyPeriodData(
                 values.originPeriod.format("MMYYYY"),
                 values.destinationPeriod.format("MMYYYY"),
                 authToken
             );
+
+            // Mostrar mensaje de éxito
+            message.success("La copia del periodo fue exitosa.");
+
+            setIsModalVisible(false); // Ahora cerramos el modal después del éxito
         } catch (error) {
             console.log(error);
+            message.error("Ocurrió un error durante la copia del periodo."); // Mensaje de error en caso de fallo
         } finally {
-            setIsModalVisible(false);
-            setIsCopying(false);
+            setIsCopying(false); // Desactivamos el estado de carga
         }
     };
 
@@ -86,7 +101,7 @@ const CopyPeriodModal = (params: {
                         <Button
                             type="primary"
                             danger
-                            loading={isCopying}
+                            loading={isCopying} // Añadimos el estado de carga
                             style={{ marginLeft: 10 }}
                         >
                             {isCopying ? null : "Copiar"}
