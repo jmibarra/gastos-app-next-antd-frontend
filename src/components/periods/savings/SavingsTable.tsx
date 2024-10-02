@@ -115,7 +115,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
     };
 
     let childNode = children;
-    if (editable && title !== "Fecha de movimiento") {
+
+    if (editable && (title === "Descripción" || title === "Monto")) {
         childNode = editing ? (
             <Form.Item
                 style={{ margin: 0 }}
