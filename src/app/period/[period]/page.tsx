@@ -165,6 +165,7 @@ export default function Period({ params }: { params: { period: string } }) {
             <CopyPeriodModal
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}
+                currentPeriod={period}
             />
         </Authenticated>
     );

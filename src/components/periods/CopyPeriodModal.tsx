@@ -1,11 +1,13 @@
 import React from "react";
+import dayjs from "dayjs";
 import { Button, DatePicker, Row, Modal, Form } from "antd";
 
 const CopyPeriodModal = (params: {
     isModalVisible: boolean;
     setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    currentPeriod: string;
 }) => {
-    const { isModalVisible, setIsModalVisible } = params;
+    const { isModalVisible, setIsModalVisible, currentPeriod } = params;
 
     const [form] = Form.useForm(); // Formulario de Ant Design
     const handleCancel = () => {
@@ -26,7 +28,11 @@ const CopyPeriodModal = (params: {
         >
             <Form form={form} layout="vertical">
                 <Form.Item label="Periodo origen">
-                    <DatePicker picker="month" format={"MMYYYY"} />
+                    <DatePicker
+                        picker="month"
+                        format={"MMYYYY"}
+                        value={dayjs(currentPeriod, "MMYYYY")}
+                    />
                 </Form.Item>
                 <Form.Item label="Periodo destino">
                     <DatePicker picker="month" format={"MMYYYY"} />
