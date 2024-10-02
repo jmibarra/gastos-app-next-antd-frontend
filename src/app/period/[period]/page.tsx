@@ -1,9 +1,17 @@
 "use client";
 import dayjs from "dayjs";
-
 import { useEffect, useState } from "react";
 import Authenticated from "../../authenticated/page";
-import { Button, Col, DatePicker, Divider, Row } from "antd";
+import {
+    Button,
+    Col,
+    DatePicker,
+    Divider,
+    Row,
+    Modal,
+    Form,
+    Input,
+} from "antd";
 import ExpenseTable from "@/components/periods/expenses/ExpensesTable";
 import IncomeTable from "@/components/periods/incomes/IncomeTable";
 import SavingsTable from "@/components/periods/savings/savingsTable";
@@ -16,7 +24,8 @@ import {
     getSavingsByPeriod,
 } from "./services";
 import MonthMetricsBoards from "@/components/periods/metrics/monthMetricsBoards";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { CopyOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
+import CopyPeriodModal from "@/components/periods/CopyPeriodModal";
 
 export default function Period({ params }: { params: { period: string } }) {
     const [period, setPeriod] = useState(params.period);
@@ -24,9 +33,9 @@ export default function Period({ params }: { params: { period: string } }) {
     const [incomes, setIncomes] = useState<IIncome[]>([]);
     const [savings, setSavings] = useState<ISaving[]>([]);
     const [authToken, setAuthToken] = useState<string>("");
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
-        // Esto solo se ejecutará en el cliente
         const parsedUserData = localStorage.getItem("user");
         const user = parsedUserData ? JSON.parse(parsedUserData) : null;
         const token = user ? user.token : null;
@@ -49,7 +58,6 @@ export default function Period({ params }: { params: { period: string } }) {
             const fetchedIncomes = await getIncomesByPeriod(period, authToken);
             setIncomes(fetchedIncomes);
         };
-
         fetchIncomes();
     }, [period, authToken]);
 
@@ -58,7 +66,6 @@ export default function Period({ params }: { params: { period: string } }) {
             const fetchedSavings = await getSavingsByPeriod(period, authToken);
             setSavings(fetchedSavings);
         };
-
         fetchSavings();
     }, [period, authToken]);
 
@@ -80,24 +87,40 @@ export default function Period({ params }: { params: { period: string } }) {
         setPeriod(newPeriod);
     };
 
+    const showCopyModal = () => {
+        setIsModalVisible(true); // Muestra el modal
+    };
+
     return (
         <Authenticated>
-            <h1>Periodo {period} </h1>
+            <h1>Periodo {period}</h1>
             <Divider orientation="left">Periodo</Divider>
-            <Row align="middle" justify="center">
+            <Row align="middle" justify="space-between">
+                <Row align="middle">
+                    <Button
+                        icon={<LeftOutlined />}
+                        onClick={handlePreviousPeriod}
+                    />
+                    <DatePicker
+                        onChange={handlePeriodChange}
+                        picker="month"
+                        format={"MMYYYY"}
+                        value={dayjs(period, "MMYYYY")}
+                        style={{ margin: "0 10px" }}
+                    />
+                    <Button
+                        icon={<RightOutlined />}
+                        onClick={handleNextPeriod}
+                    />
+                </Row>
                 <Button
-                    icon={<LeftOutlined />}
-                    onClick={handlePreviousPeriod}
-                />
-                <DatePicker
-                    onChange={handlePeriodChange}
-                    picker="month"
-                    format={"MMYYYY"}
-                    value={dayjs(period, "MMYYYY")}
-                    style={{ margin: "0 10px" }}
-                />
-                <Button icon={<RightOutlined />} onClick={handleNextPeriod} />
+                    type="primary"
+                    onClick={showCopyModal}
+                    icon={<CopyOutlined />}
+                    shape="round"
+                ></Button>
             </Row>
+
             <Divider orientation="left">Datos del mes</Divider>
             <MonthMetricsBoards
                 incomes={incomes}
@@ -137,6 +160,12 @@ export default function Period({ params }: { params: { period: string } }) {
                     />
                 </Col>
             </Row>
+
+            {/* Modal para copiar periodo */}
+            <CopyPeriodModal
+                isModalVisible={isModalVisible}
+                setIsModalVisible={setIsModalVisible}
+            />
         </Authenticated>
     );
 }
