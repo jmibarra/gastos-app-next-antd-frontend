@@ -14,7 +14,7 @@ import {
 } from "antd";
 import ExpenseTable from "@/components/periods/expenses/ExpensesTable";
 import IncomeTable from "@/components/periods/incomes/IncomeTable";
-import SavingsTable from "@/components/periods/savings/savingsTable";
+import SavingsTable from "@/components/periods/savings/SavingsTable";
 import { IExpense } from "./models/expense.model";
 import { IIncome } from "./models/income.model";
 import { ISaving } from "./models";
@@ -166,6 +166,7 @@ export default function Period({ params }: { params: { period: string } }) {
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}
                 currentPeriod={period}
+                authToken={authToken}
             />
         </Authenticated>
     );
