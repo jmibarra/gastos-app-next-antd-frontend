@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
 import { Button, DatePicker, Row, Modal, Form } from "antd";
 import { copyPeriodData } from "@/app/period/[period]/services/common.services";
@@ -9,6 +9,7 @@ const CopyPeriodModal = (params: {
     currentPeriod: string;
     authToken: string;
 }) => {
+    const [isCopying, setIsCopying] = useState(false);
     const { isModalVisible, setIsModalVisible, currentPeriod, authToken } =
         params;
 
@@ -20,6 +21,7 @@ const CopyPeriodModal = (params: {
     const handleCopy = async () => {
         try {
             const values = await form.validateFields();
+            setIsCopying(true);
 
             copyPeriodData(
                 values.originPeriod.format("MMYYYY"),
@@ -29,6 +31,8 @@ const CopyPeriodModal = (params: {
             setIsModalVisible(false); // Oculta el modal al copiar
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsCopying(false);
         }
     };
 
@@ -77,9 +81,10 @@ const CopyPeriodModal = (params: {
                         type="primary"
                         danger
                         onClick={handleCopy}
+                        loading={isCopying}
                         style={{ marginLeft: 10 }}
                     >
-                        Copiar
+                        {isCopying ? null : "Copiar"}
                     </Button>
                 </Row>
             </Form>
