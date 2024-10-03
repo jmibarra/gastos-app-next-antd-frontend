@@ -40,6 +40,9 @@ interface EditableCellProps {
     authToken: string;
 }
 
+import { Select } from "antd";
+import { categoryIconsMap } from "./categoryIcons"; // Asumimos que es un objeto que contiene el mapeo de iconos
+
 const EditableCell: React.FC<EditableCellProps> = ({
     title,
     editable,
@@ -68,12 +71,9 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const save = async () => {
         try {
             const values = await form.validateFields();
-
             toggleEdit();
-
             const newValue = { ...record, ...values };
             handleSave(newValue);
-
             updateCategoryById(record._id, newValue, authToken);
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
@@ -81,8 +81,48 @@ const EditableCell: React.FC<EditableCellProps> = ({
     };
 
     let childNode = children;
+
     if (editable) {
-        if (title == "Color") {
+        if (dataIndex === "icon") {
+            // Selector de íconos
+            childNode = editing ? (
+                <Form.Item
+                    style={{ margin: 0 }}
+                    name={dataIndex}
+                    rules={[
+                        {
+                            required: true,
+                            message: `${title} is required.`,
+                        },
+                    ]}
+                >
+                    <Select
+                        ref={inputRef}
+                        onPressEnter={save}
+                        onBlur={save}
+                        onChange={save}
+                    >
+                        {Object.keys(categoryIconsMap).map((iconKey) => (
+                            <Select.Option key={iconKey} value={iconKey}>
+                                <span style={{ marginRight: 8 }}>
+                                    {categoryIconsMap[iconKey]}
+                                </span>
+                                {iconKey}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+            ) : (
+                <div
+                    className="editable-cell-value-wrap"
+                    style={{ paddingRight: 24 }}
+                    onClick={toggleEdit}
+                >
+                    {children}
+                </div>
+            );
+        } else if (dataIndex === "color") {
+            // Campo de color
             childNode = editing ? (
                 <Form.Item
                     style={{ margin: 0 }}
@@ -96,9 +136,9 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 >
                     <Input
                         ref={inputRef}
+                        type="color"
                         onPressEnter={save}
                         onBlur={save}
-                        type="color"
                     />
                 </Form.Item>
             ) : (
@@ -111,6 +151,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 </div>
             );
         } else {
+            // Campos de texto
             childNode = editing ? (
                 <Form.Item
                     style={{ margin: 0 }}

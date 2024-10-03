@@ -181,7 +181,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                         {categories.map((category) => (
                             <Option value={category._id}>
                                 {" "}
-                                <CategoryIcons category={category.name} />
+                                <CategoryIcons category={category.icon} />
                                 {category.name}
                             </Option>
                         ))}
@@ -304,7 +304,7 @@ const ExpenseTable = (params: {
             dataIndex: "category",
             render: (category: ICategory) => (
                 <Tag
-                    icon={<CategoryIcons category={category?.name} />}
+                    icon={<CategoryIcons category={category?.icon} />}
                     color={category?.color}
                 >
                     {category?.name}
