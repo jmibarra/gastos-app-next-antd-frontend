@@ -2,16 +2,7 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import Authenticated from "../../authenticated/page";
-import {
-    Button,
-    Col,
-    DatePicker,
-    Divider,
-    Row,
-    Modal,
-    Form,
-    Input,
-} from "antd";
+import { Button, Col, DatePicker, Divider, Row } from "antd";
 import ExpenseTable from "@/components/periods/expenses/ExpensesTable";
 import IncomeTable from "@/components/periods/incomes/IncomeTable";
 import SavingsTable from "@/components/periods/savings/SavingsTable";
@@ -26,12 +17,18 @@ import {
 import MonthMetricsBoards from "@/components/periods/metrics/monthMetricsBoards";
 import { CopyOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
 import CopyPeriodModal from "@/components/periods/CopyPeriodModal";
+import { getStatus } from "@/app/settings/status/services/status.service";
+import { getCategories } from "@/app/settings/category/services";
+import { IStatus } from "@/app/settings/status/models";
+import { ICategory } from "@/app/settings/category/models";
 
 export default function Period({ params }: { params: { period: string } }) {
     const [period, setPeriod] = useState(params.period);
     const [expenses, setExpenses] = useState<IExpense[]>([]);
     const [incomes, setIncomes] = useState<IIncome[]>([]);
     const [savings, setSavings] = useState<ISaving[]>([]);
+    const [categories, setCategories] = useState<ICategory[]>([]);
+    const [statuses, setStatuses] = useState<IStatus[]>([]);
     const [authToken, setAuthToken] = useState<string>("");
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -71,6 +68,28 @@ export default function Period({ params }: { params: { period: string } }) {
         };
         fetchSavings();
     }, [period, authToken]);
+
+    useEffect(() => {
+        if (authToken) {
+            fetchCategories(authToken);
+        }
+    }, [authToken]);
+
+    useEffect(() => {
+        if (authToken) {
+            fetchStatuses(authToken);
+        }
+    }, [authToken]);
+
+    const fetchStatuses = async (authToken: string) => {
+        const fetchedStatuses = await getStatus(authToken);
+        setStatuses(fetchedStatuses);
+    };
+
+    const fetchCategories = async (authToken: string) => {
+        const fetchedCategories = await getCategories(authToken);
+        setCategories(fetchedCategories);
+    };
 
     const handlePeriodChange = (date: any, dateString: string | string[]) => {
         setPeriod(typeof dateString === "string" ? dateString : dateString[0]);
@@ -138,6 +157,7 @@ export default function Period({ params }: { params: { period: string } }) {
                         updateIncomes={setIncomes}
                         period={period}
                         authToken={authToken}
+                        statuses={statuses}
                     />
                 </Col>
             </Row>
@@ -149,6 +169,8 @@ export default function Period({ params }: { params: { period: string } }) {
                         updateExpenses={setExpenses}
                         period={period}
                         authToken={authToken}
+                        statuses={statuses}
+                        categories={categories}
                     />
                 </Col>
             </Row>

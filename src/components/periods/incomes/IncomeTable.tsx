@@ -19,7 +19,7 @@ import {
     deleteIncomeById,
     updateIncomeById,
 } from "@/app/period/[period]/services";
-import { Status } from "@/app/settings/status/models";
+import { IStatus } from "@/app/settings/status/models";
 
 const { Option } = Select;
 
@@ -53,6 +53,7 @@ interface EditableCellProps {
     children: React.ReactNode;
     dataIndex: keyof IIncome;
     record: IIncome;
+    statuses: IStatus[];
     handleSave: (record: IIncome) => void;
     authToken: string;
 }
@@ -63,6 +64,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     children,
     dataIndex,
     record,
+    statuses,
     handleSave,
     authToken,
     ...restProps
@@ -154,14 +156,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
                     },
                 ]}
             >
-                {/* Deberia dinamizar esto trayendome las opciones desde la api */}
-                <Select ref={selectRef} onBlur={save}>
-                    <Option value="65d0fb6db33cebd95694e233">Estimado</Option>
-                    <Option value="6553fe526562128ac0dd6f6e">Pendiente</Option>
-                    <Option value="65d0fb82b33cebd95694e234">
-                        Transferido
-                    </Option>
-                    <Option value="6553fd74df59e3f9af341a03">Pago</Option>
+                <Select ref={selectRef} onBlur={save} onChange={save}>
+                    {statuses.map((status) => (
+                        <Select.Option key={status._id} value={status._id}>
+                            {status.name}
+                        </Select.Option>
+                    ))}
                 </Select>
             </Form.Item>
         ) : (
@@ -208,9 +208,10 @@ const IncomeTable = (params: {
     updateIncomes: any;
     period: string;
     authToken: string;
+    statuses: IStatus[];
 }) => {
     const [createButtonLoading, setCreateButtonLoading] = useState(false);
-    const { incomes, updateIncomes, authToken } = params;
+    const { incomes, updateIncomes, authToken, statuses } = params;
 
     const handleDelete = (key: string) => {
         const newData = incomes.filter((item) => item._id !== key);
@@ -237,7 +238,7 @@ const IncomeTable = (params: {
         {
             title: "Estado",
             dataIndex: "status",
-            render: (status: Status) => (
+            render: (status: IStatus) => (
                 <Tag
                     icon={<StatusIcons status={status?.name} />}
                     color={status?.color}
@@ -316,6 +317,7 @@ const IncomeTable = (params: {
                 editable: col.editable,
                 dataIndex: col.dataIndex,
                 title: col.title,
+                statuses,
                 handleSave,
                 authToken,
             }),

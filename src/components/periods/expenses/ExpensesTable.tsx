@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
+import dayjs from "dayjs";
 import {
     Button,
     DatePicker,
@@ -11,7 +12,11 @@ import {
     Tag,
 } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
+
 import { IExpense } from "@/app/period/[period]/models/expense.model";
+import { ICategory } from "@/app/settings/category/models";
+import { IStatus } from "@/app/settings/status/models";
+
 import { StatusIcons } from "../../status/statusIcons";
 import { CategoryIcons } from "../../category/categoryIcons";
 import {
@@ -20,19 +25,12 @@ import {
     updateExpenseById,
 } from "@/app/period/[period]/services/expenses.service";
 
-const { Option } = Select;
-
-import dayjs from "dayjs";
-
-import { ICategory } from "@/app/settings/category/models";
-import { getCategories } from "@/app/settings/category/services";
-import { Status } from "@/app/settings/status/models";
-import { getStatus } from "@/app/settings/status/services/status.service";
-
 type InputRef = GetRef<typeof Input>;
 type SelectRef = GetRef<typeof Select>;
 type DateRef = GetRef<typeof DatePicker>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
+
+const { Option } = Select;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
@@ -60,7 +58,7 @@ interface EditableCellProps {
     dataIndex: keyof IExpense;
     record: IExpense;
     categories: ICategory[];
-    statuses: Status[];
+    statuses: IStatus[];
     handleSave: (record: IExpense) => void;
     authToken: string;
 }
@@ -243,36 +241,12 @@ const ExpenseTable = (params: {
     updateExpenses: any;
     period: string;
     authToken: string;
+    statuses: IStatus[];
+    categories: ICategory[];
 }) => {
+    const { expenses, updateExpenses, authToken, statuses, categories } =
+        params;
     const [createButtonLoading, setCreateButtonLoading] = useState(false);
-    const { expenses, updateExpenses, authToken } = params;
-    const [categories, setCategories] = useState<ICategory[]>([]);
-    const [statuses, setStatuses] = useState<Status[]>([]);
-
-    useEffect(() => {
-        if (authToken) {
-            fetchCategories(authToken);
-        }
-    }, [authToken]);
-
-    useEffect(() => {
-        if (authToken) {
-            fetchStatuses(authToken);
-        }
-    }, [authToken]);
-
-    const fetchStatuses = async (authToken: string) => {
-        const fetchedStatuses = await getStatus(authToken);
-        setStatuses(fetchedStatuses);
-    };
-
-    const fetchCategories = async (authToken: string) => {
-        const fetchedCategories = await getCategories(authToken);
-        setCategories(fetchedCategories);
-    };
-
-    console.log(statuses);
-    console.log(categories);
 
     const handleDelete = (key: string) => {
         const newData = expenses.filter((item) => item._id !== key);
@@ -299,7 +273,7 @@ const ExpenseTable = (params: {
         {
             title: "Estado",
             dataIndex: "status",
-            render: (status: Status) => (
+            render: (status: IStatus) => (
                 <Tag
                     icon={<StatusIcons status={status?.name} />}
                     color={status?.color}
