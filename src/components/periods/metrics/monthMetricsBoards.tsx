@@ -28,8 +28,6 @@ const MonthMetricsBoards = (params: {
 }) => {
     const { incomes, expenses, savings } = params;
 
-    console.log(expenses);
-
     //Contemplar que amount puede ser null
     const filteredIncomes = incomes.filter((income) => income.amount !== null);
     const totalIncomesAmount = filteredIncomes.reduce(

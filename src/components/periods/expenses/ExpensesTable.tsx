@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { use, useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
 import {
     Button,
@@ -27,6 +27,7 @@ import dayjs from "dayjs";
 import { ICategory } from "@/app/settings/category/models";
 import { getCategories } from "@/app/settings/category/services";
 import { Status } from "@/app/settings/status/models";
+import { getStatus } from "@/app/settings/status/services/status.service";
 
 type InputRef = GetRef<typeof Input>;
 type SelectRef = GetRef<typeof Select>;
@@ -78,14 +79,17 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const dateRef = useRef<DateRef>(null);
     const form = useContext(EditableContext)!;
     const [categories, setCategories] = useState<ICategory[]>([]);
+    const [statuses, setStatuses] = useState<Status[]>([]);
 
     useEffect(() => {
         const fetchCategories = async () => {
             const fetchedCategories = await getCategories(authToken);
             setCategories(fetchedCategories);
         };
-        fetchCategories();
-    }, []);
+        if (authToken) {
+            fetchCategories();
+        }
+    }, [authToken]);
 
     useEffect(() => {
         if (editing) {
@@ -143,17 +147,31 @@ const EditableCell: React.FC<EditableCellProps> = ({
                     ]}
                 >
                     {/* Deberia dinamizar esto trayendome las opciones desde la api */}
-                    <Select ref={selectRef} onBlur={save}>
-                        <Option value="65d0fb6db33cebd95694e233">
+                    <Select ref={selectRef} onBlur={save} onChange={save}>
+                        <Select.Option
+                            key={"65d0fb6db33cebd95694e233"}
+                            value="65d0fb6db33cebd95694e233"
+                        >
                             Estimado
-                        </Option>
-                        <Option value="6553fe526562128ac0dd6f6e">
+                        </Select.Option>
+                        <Select.Option
+                            key={"6553fe526562128ac0dd6f6e"}
+                            value="6553fe526562128ac0dd6f6e"
+                        >
                             Pendiente
-                        </Option>
-                        <Option value="65d0fb82b33cebd95694e234">
+                        </Select.Option>
+                        <Select.Option
+                            key={"65d0fb82b33cebd95694e234"}
+                            value="65d0fb82b33cebd95694e234"
+                        >
                             Transferido
-                        </Option>
-                        <Option value="6553fd74df59e3f9af341a03">Pago</Option>
+                        </Select.Option>
+                        <Select.Option
+                            key={"6553fd74df59e3f9af341a03"}
+                            value="6553fd74df59e3f9af341a03"
+                        >
+                            Pago
+                        </Select.Option>
                     </Select>
                 </Form.Item>
             ) : (

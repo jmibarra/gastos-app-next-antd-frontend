@@ -25,7 +25,7 @@ const Category = () => {
 
     return (
         <Authenticated>
-            <h1>Categorías de gastos</h1>
+            <h1>Estados</h1>
             <Divider orientation="left">Estados disponibles</Divider>
             <Row>
                 <Col span={24}>Aca va la tabla</Col>

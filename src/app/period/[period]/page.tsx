@@ -43,6 +43,7 @@ export default function Period({ params }: { params: { period: string } }) {
     }, []);
 
     useEffect(() => {
+        if (!authToken) return;
         const fetchExpenses = async () => {
             const fetchedExpenses = await getExpensesByPeriod(
                 period,
@@ -54,6 +55,7 @@ export default function Period({ params }: { params: { period: string } }) {
     }, [period, authToken]);
 
     useEffect(() => {
+        if (!authToken) return;
         const fetchIncomes = async () => {
             const fetchedIncomes = await getIncomesByPeriod(period, authToken);
             setIncomes(fetchedIncomes);
@@ -62,6 +64,7 @@ export default function Period({ params }: { params: { period: string } }) {
     }, [period, authToken]);
 
     useEffect(() => {
+        if (!authToken) return;
         const fetchSavings = async () => {
             const fetchedSavings = await getSavingsByPeriod(period, authToken);
             setSavings(fetchedSavings);
