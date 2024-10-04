@@ -1,4 +1,4 @@
-import React, { use, useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
 import {
     Button,
@@ -59,6 +59,8 @@ interface EditableCellProps {
     children: React.ReactNode;
     dataIndex: keyof IExpense;
     record: IExpense;
+    categories: ICategory[];
+    statuses: Status[];
     handleSave: (record: IExpense) => void;
     authToken: string;
 }
@@ -69,6 +71,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
     children,
     dataIndex,
     record,
+    categories,
+    statuses,
     handleSave,
     authToken,
     ...restProps
@@ -78,18 +82,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const selectRef = useRef<SelectRef>(null);
     const dateRef = useRef<DateRef>(null);
     const form = useContext(EditableContext)!;
-    const [categories, setCategories] = useState<ICategory[]>([]);
-    const [statuses, setStatuses] = useState<Status[]>([]);
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            const fetchedCategories = await getCategories(authToken);
-            setCategories(fetchedCategories);
-        };
-        if (authToken) {
-            fetchCategories();
-        }
-    }, [authToken]);
 
     useEffect(() => {
         if (editing) {
@@ -146,32 +138,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
                         },
                     ]}
                 >
-                    {/* Deberia dinamizar esto trayendome las opciones desde la api */}
                     <Select ref={selectRef} onBlur={save} onChange={save}>
-                        <Select.Option
-                            key={"65d0fb6db33cebd95694e233"}
-                            value="65d0fb6db33cebd95694e233"
-                        >
-                            Estimado
-                        </Select.Option>
-                        <Select.Option
-                            key={"6553fe526562128ac0dd6f6e"}
-                            value="6553fe526562128ac0dd6f6e"
-                        >
-                            Pendiente
-                        </Select.Option>
-                        <Select.Option
-                            key={"65d0fb82b33cebd95694e234"}
-                            value="65d0fb82b33cebd95694e234"
-                        >
-                            Transferido
-                        </Select.Option>
-                        <Select.Option
-                            key={"6553fd74df59e3f9af341a03"}
-                            value="6553fd74df59e3f9af341a03"
-                        >
-                            Pago
-                        </Select.Option>
+                        {statuses.map((status) => (
+                            <Select.Option key={status._id} value={status._id}>
+                                {status.name}
+                            </Select.Option>
+                        ))}
                     </Select>
                 </Form.Item>
             ) : (
@@ -273,8 +245,34 @@ const ExpenseTable = (params: {
     authToken: string;
 }) => {
     const [createButtonLoading, setCreateButtonLoading] = useState(false);
-
     const { expenses, updateExpenses, authToken } = params;
+    const [categories, setCategories] = useState<ICategory[]>([]);
+    const [statuses, setStatuses] = useState<Status[]>([]);
+
+    useEffect(() => {
+        if (authToken) {
+            fetchCategories(authToken);
+        }
+    }, [authToken]);
+
+    useEffect(() => {
+        if (authToken) {
+            fetchStatuses(authToken);
+        }
+    }, [authToken]);
+
+    const fetchStatuses = async (authToken: string) => {
+        const fetchedStatuses = await getStatus(authToken);
+        setStatuses(fetchedStatuses);
+    };
+
+    const fetchCategories = async (authToken: string) => {
+        const fetchedCategories = await getCategories(authToken);
+        setCategories(fetchedCategories);
+    };
+
+    console.log(statuses);
+    console.log(categories);
 
     const handleDelete = (key: string) => {
         const newData = expenses.filter((item) => item._id !== key);
@@ -393,6 +391,8 @@ const ExpenseTable = (params: {
                 editable: col.editable,
                 dataIndex: col.dataIndex,
                 title: col.title,
+                statuses,
+                categories,
                 handleSave,
                 authToken,
             }),
