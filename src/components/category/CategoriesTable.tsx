@@ -11,6 +11,7 @@ import {
 import { CategoryIcons } from "./categoryIcons";
 
 type InputRef = GetRef<typeof Input>;
+type SelectRef = GetRef<typeof Select>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
@@ -55,11 +56,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<InputRef>(null);
+    const selectRef = useRef<SelectRef>(null);
     const form = useContext(EditableContext)!;
 
     useEffect(() => {
         if (editing) {
-            inputRef.current!.focus();
+            if (dataIndex === "icon") {
+                selectRef.current?.focus();
+            } else inputRef.current!.focus();
         }
     }, [editing]);
 
@@ -96,12 +100,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                         },
                     ]}
                 >
-                    <Select
-                        ref={inputRef}
-                        onPressEnter={save}
-                        onBlur={save}
-                        onChange={save}
-                    >
+                    <Select ref={selectRef} onBlur={save} onChange={save}>
                         {Object.keys(categoryIconsMap).map((iconKey) => (
                             <Select.Option key={iconKey} value={iconKey}>
                                 <span style={{ marginRight: 8 }}>
