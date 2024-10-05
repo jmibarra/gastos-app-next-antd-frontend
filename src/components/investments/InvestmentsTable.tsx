@@ -9,10 +9,14 @@ import {
     Select,
     DatePicker,
     Table,
-    Tag,
 } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
-import { IInvestment } from "@/app/investments/models";
+import { IInvestment } from "../../app/investments/models";
+import {
+    createInvestment,
+    deleteInvestmentById,
+    updateInvestmentById,
+} from "../../app/investments/services";
 
 const { Option } = Select;
 
@@ -93,15 +97,15 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
             const newValue = { ...record, ...values };
 
-            /*const response = updateSavingById(
+            const response = updateInvestmentById(
                 newValue._id,
                 newValue,
                 authToken
             );
 
-            response.then((updatedRecord: ISaving) => {
+            response.then((updatedRecord: IInvestment) => {
                 handleSave(updatedRecord);
-            }); */
+            });
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
         }
@@ -152,7 +156,9 @@ const EditableCell: React.FC<EditableCellProps> = ({
             >
                 <Select ref={selectRef} onBlur={save}>
                     <Option value="CEDEARS">CEDEARS</Option>
-                    <Option value="ONs">Obligaciones Negociables</Option>
+                    <Option value="Obligación Negociable">
+                        Obligaciones Negociables
+                    </Option>
                     <Option value="Bonos">Bonos</Option>
                     <Option value="Efectivo">Efectivo</Option>
                 </Select>
@@ -186,7 +192,7 @@ const InvestmentsTable = (params: {
     const handleDelete = (key: string) => {
         const newData = investments.filter((item) => item._id !== key);
         updateInvestments(newData);
-        //deleteInvestmentById(key, authToken);
+        deleteInvestmentById(key, authToken);
     };
 
     const defaultColumns: (ColumnTypes[number] & {
@@ -243,12 +249,12 @@ const InvestmentsTable = (params: {
 
         updateInvestments([...investments, newData]); // PRovisorio
 
-        /*const response = createSaving(newData, authToken);
+        const response = createInvestment(newData, authToken);
 
         response.then((data) => {
-            updateSavings([...savings, data]);
+            updateInvestments([...investments, data]);
             setCreateButtonLoading(false);
-        }); /*/
+        });
     };
 
     const handleSave = (row: IInvestment) => {
@@ -259,7 +265,7 @@ const InvestmentsTable = (params: {
             ...item,
             ...row,
         });
-        //updateSavings(newData);
+        updateInvestments(newData);
     };
 
     const components = {
