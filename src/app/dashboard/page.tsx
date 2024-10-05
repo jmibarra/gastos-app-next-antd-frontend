@@ -1,7 +1,7 @@
 // src/app/investments/page.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { Typography, Button, Card, Row, Col } from "antd";
+import { Typography, Card, Row, Col } from "antd";
 import { useRouter } from "next/navigation";
 import Authenticated from "../authenticated/page";
 import {
