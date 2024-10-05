@@ -1,7 +1,7 @@
 import { Card, Col, Row } from "antd";
 import React from "react";
 import { StatisticCard } from "./StatisticCard";
-import { MonthResultStatisticCard } from "../MonthResultStatisticCard";
+import { MonthResultStatisticCard } from "./MonthResultStatisticCard";
 import { IExpense, IIncome, ISaving } from "@/app/period/[period]/models";
 import {
     Bar,
