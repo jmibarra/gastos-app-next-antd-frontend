@@ -1,18 +1,18 @@
 // src/app/investments/page.tsx
 "use client";
-import React from "react";
-import { Typography, Row, Divider } from "antd";
+import React, { useState } from "react";
+import { Typography, Row, Divider, Col } from "antd";
 const { Title, Paragraph } = Typography;
-import { useRouter } from "next/navigation";
 import Authenticated from "../authenticated/page";
-import InvestmentsMetrics from "@/components/investments/investmentsMetrics";
+import {
+    InvestmentsMetrics,
+    InvestmentsTable,
+} from "../../components/investments";
+import { IInvestment } from "./models";
 
 const InvestmentsPage = () => {
-    const router = useRouter();
-
-    const handleGoBack = () => {
-        router.push("/"); // Cambia esto a la ruta que desees
-    };
+    const [investments, setInvestments] = useState<IInvestment[]>([]);
+    const [authToken, setAuthToken] = useState<string>("");
 
     return (
         <Authenticated>
@@ -24,7 +24,13 @@ const InvestmentsPage = () => {
                 <InvestmentsMetrics />
                 <Divider orientation="left">Inversiones</Divider>
                 <Row gutter={16} style={{ marginTop: "20px" }}>
-                    Tabla de inversiones
+                    <Col span={24}>
+                        <InvestmentsTable
+                            investments={investments}
+                            updateInvestments={setInvestments}
+                            authToken={authToken}
+                        />
+                    </Col>
                 </Row>
             </div>
         </Authenticated>
