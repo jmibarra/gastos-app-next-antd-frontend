@@ -15,6 +15,7 @@ import { IInvestment } from "../../app/investments/models";
 import {
     createInvestment,
     deleteInvestmentById,
+    getInvestmentInfoFromYahoo,
     updateInvestmentById,
 } from "../../app/investments/services";
 
@@ -22,7 +23,6 @@ const { Option } = Select;
 
 type InputRef = GetRef<typeof Input>;
 type SelectRef = GetRef<typeof Select>;
-type DateRef = GetRef<typeof DatePicker>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
@@ -246,7 +246,7 @@ const InvestmentsTable = (params: {
         setCreateButtonLoading(true);
         const newData: IInvestment = {
             _id: "1",
-            ticker: "TEST",
+            ticker: "-",
             name: `Nueva inversión`,
             averagePurchasePrice: 0,
             quantity: 1,
