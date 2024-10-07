@@ -67,7 +67,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<InputRef>(null);
     const selectRef = useRef<SelectRef>(null);
-    const dateRef = useRef<DateRef>(null);
     const form = useContext(EditableContext)!;
 
     useEffect(() => {
@@ -117,7 +116,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
         editable &&
         (dataIndex === "name" ||
             dataIndex === "averagePurchasePrice" ||
-            dataIndex === "quantity")
+            dataIndex === "quantity" ||
+            dataIndex === "ticker")
     ) {
         childNode = editing ? (
             <Form.Item
@@ -200,6 +200,11 @@ const InvestmentsTable = (params: {
         dataIndex: string;
     })[] = [
         {
+            title: "Ticker",
+            dataIndex: "ticker",
+            editable: true,
+        },
+        {
             title: "Nombre",
             dataIndex: "name",
             width: "30%",
@@ -241,6 +246,7 @@ const InvestmentsTable = (params: {
         setCreateButtonLoading(true);
         const newData: IInvestment = {
             _id: "1",
+            ticker: "TEST",
             name: `Nueva inversión`,
             averagePurchasePrice: 0,
             quantity: 1,
