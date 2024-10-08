@@ -211,15 +211,27 @@ const InvestmentsTable = (params: {
             editable: true,
         },
         {
+            title: "Cantindad",
+            dataIndex: "quantity",
+            editable: true,
+        },
+        {
             title: "Precio promedio de compra",
             dataIndex: "averagePurchasePrice",
             editable: true,
             render: (value) => <>$ {value}</>,
         },
         {
-            title: "Cantindad",
-            dataIndex: "quantity",
-            editable: true,
+            title: "Total invertido",
+            dataIndex: "",
+            editable: false,
+            render: (_, record: IInvestment) => (
+                <>
+                    ${" "}
+                    {record.averagePurchasePrice ??
+                        0 * (record.quantity ? record.quantity : 0)}
+                </>
+            ),
         },
         {
             title: "Tipo de instrumento",
