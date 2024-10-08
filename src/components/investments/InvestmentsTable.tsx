@@ -1,15 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
 import dayjs from "dayjs";
-import {
-    Button,
-    Form,
-    Input,
-    Popconfirm,
-    Select,
-    DatePicker,
-    Table,
-} from "antd";
+import { Button, Form, Input, Popconfirm, Select, Table } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
 import { IInvestment } from "../../app/investments/models";
 import {
@@ -116,7 +108,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
         (dataIndex === "name" ||
             dataIndex === "averagePurchasePrice" ||
             dataIndex === "quantity" ||
-            dataIndex === "ticker")
+            dataIndex === "ticker" ||
+            dataIndex === "currentPrice")
     ) {
         childNode = editing ? (
             <Form.Item
@@ -156,7 +149,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 <Select ref={selectRef} onBlur={save}>
                     <Option value="CEDEARS">CEDEARS</Option>
                     <Option value="Obligación Negociable">
-                        Obligaciones Negociables
+                        Obligación Negociable
                     </Option>
                     <Option value="Bonos">Bonos</Option>
                     <Option value="Efectivo">Efectivo</Option>
@@ -206,7 +199,7 @@ const InvestmentsTable = (params: {
         {
             title: "Nombre",
             dataIndex: "name",
-            width: "30%",
+            width: "25%",
             editable: true,
         },
         {
@@ -217,6 +210,7 @@ const InvestmentsTable = (params: {
         {
             title: "Precio promedio de compra",
             dataIndex: "averagePurchasePrice",
+            width: "15%",
             editable: true,
             render: (value) => <>$ {value}</>,
         },
@@ -278,6 +272,7 @@ const InvestmentsTable = (params: {
             ticker: "-",
             name: `Nueva inversión`,
             averagePurchasePrice: 0,
+            currentPrice: 0,
             quantity: 1,
             type: "CEDEAR",
         };

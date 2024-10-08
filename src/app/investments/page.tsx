@@ -53,7 +53,7 @@ const InvestmentsPage = () => {
                 <Paragraph>
                     Realiza un seguimiento de tus inversiones.
                 </Paragraph>
-                <InvestmentsMetrics />
+                <InvestmentsMetrics investments={investments} />
                 <Divider orientation="left">Inversiones</Divider>
                 <Row gutter={16} style={{ marginTop: "20px" }}>
                     <Col span={24}>

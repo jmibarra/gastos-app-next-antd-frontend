@@ -17,29 +17,94 @@ import {
     YAxis,
     Tooltip,
     Bar,
+    Label,
 } from "recharts";
+import { IInvestment } from "@/app/investments/models";
 
 const { Title, Paragraph } = Typography;
 
-const pieData = [
-    { name: "CEDEARS", value: 64.4 },
-    { name: "Renta Fija", value: 12.3 },
-    { name: "Liquidez U$D", value: 23.2 },
-];
-
-const barData = [
-    {
-        registro: "Mes actual",
-        CEDEARS: 10000,
-        "Obligaciones Negociables": 11000,
-        Bonos: 13000,
-        Efectivo: 5000,
-    },
-];
-
 const COLORS = ["#0088FE", "#FFBB28", "#FF8042", "#3f8600"];
 
-const InvestmentsMetrics = () => {
+const InvestmentsMetrics = (params: { investments: IInvestment[] }) => {
+    const { investments } = params;
+
+    // Agrupamos las inversiones por tipo y sumamos los valores absolutos
+    const groupedInvestments = investments.reduce((acc, investment) => {
+        const { type, quantity = 0, averagePurchasePrice = 0 } = investment;
+
+        // Verificamos si el tipo es "Bonos" o "Obligación Negociable"
+        const investmentValue =
+            type === "Bonos" || type === "Obligación Negociable"
+                ? quantity * (averagePurchasePrice / 100) // Cálculo especial para estos tipos
+                : quantity * averagePurchasePrice;
+
+        if (!acc[type]) {
+            acc[type] = 0;
+        }
+        acc[type] += investmentValue;
+
+        return acc;
+    }, {} as Record<string, number>);
+
+    // Calculamos el valor total de todas las inversiones
+    const totalInvestedAmount = investments.reduce((acc, investment) => {
+        const { quantity = 0, averagePurchasePrice = 0, type } = investment;
+
+        // Verificamos si el tipo es "Bonos" o "Obligación Negociable"
+        const investmentValue =
+            type === "Bonos" || type === "Obligación Negociable"
+                ? quantity * (averagePurchasePrice / 100) // Cálculo especial para estos tipos
+                : quantity * averagePurchasePrice;
+
+        return acc + investmentValue;
+    }, 0);
+
+    // Calculamos el valor total de todas las inversiones
+    const totalCurrentAmount = investments.reduce((acc, investment) => {
+        const { quantity = 0, currentPrice = 0, type } = investment;
+
+        // Verificamos si el tipo es "Bonos" o "Obligación Negociable"
+        const investmentValue =
+            type === "Bonos" || type === "Obligación Negociable"
+                ? quantity * (currentPrice / 100) // Cálculo especial para estos tipos
+                : quantity * currentPrice;
+
+        return acc + investmentValue;
+    }, 0);
+
+    const getPieData = (
+        groupedInvestments: Record<string, number>,
+        totalValue: number
+    ) => {
+        // Convertimos los valores agrupados a porcentajes
+        return Object.keys(groupedInvestments).map((type) => ({
+            name: type,
+            value: parseFloat(
+                ((groupedInvestments[type] / totalValue) * 100).toFixed(2) // Convertimos a porcentaje y redondeamos a 2 decimales
+            ),
+        }));
+    };
+
+    // Luego puedes usar la función dentro de tu componente
+    const pieData = getPieData(groupedInvestments, totalInvestedAmount);
+
+    const getBarData = (groupedInvestments: Record<string, number>) => {
+        // Creamos el formato para barData con los tipos conocidos
+        return [
+            {
+                registro: "Mes actual", // Etiqueta general para el registro
+                CEDEARS: groupedInvestments["CEDEARS"] || 0, // Si no existe, el valor es 0
+                "Obligaciones Negociables":
+                    groupedInvestments["Obligación Negociable"] || 0,
+                Bonos: groupedInvestments["Bonos"] || 0,
+                Efectivo: groupedInvestments["Efectivo"] || 0, // Añadir otros tipos según sea necesario
+            },
+        ];
+    };
+
+    // Luego puedes usar la función dentro de tu componente
+    const barData = getBarData(groupedInvestments);
+
     return (
         <>
             <Row gutter={16} style={{ marginTop: "20px" }}>
@@ -49,7 +114,12 @@ const InvestmentsMetrics = () => {
                             style={{ fontSize: "32px", color: "#3f8600" }}
                         />
                         <Title level={4}>Monto invertido</Title>
-                        <Paragraph>$25,000</Paragraph>
+                        <Paragraph>
+                            ${" "}
+                            {totalInvestedAmount
+                                .toFixed(2)
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        </Paragraph>
                     </Card>
                 </Col>
                 <Col span={6}>
@@ -58,7 +128,12 @@ const InvestmentsMetrics = () => {
                             style={{ fontSize: "32px", color: "#3f8600" }}
                         />
                         <Title level={4}>Valor actual</Title>
-                        <Paragraph>$25,000</Paragraph>
+                        <Paragraph>
+                            ${" "}
+                            {totalCurrentAmount
+                                .toFixed(2)
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        </Paragraph>
                     </Card>
                 </Col>
                 <Col span={6}>
@@ -67,7 +142,25 @@ const InvestmentsMetrics = () => {
                             style={{ fontSize: "32px", color: "#1890ff" }}
                         />
                         <Title level={4}>Rendimiento</Title>
-                        <Paragraph>+12.5%</Paragraph>
+                        <Paragraph
+                            style={{
+                                color:
+                                    (totalCurrentAmount / totalInvestedAmount) *
+                                        100 -
+                                        100 >
+                                    0
+                                        ? "green"
+                                        : "red",
+                            }}
+                        >
+                            {" "}
+                            {(
+                                (totalCurrentAmount / totalInvestedAmount) *
+                                    100 -
+                                100
+                            ).toFixed(2)}{" "}
+                            %
+                        </Paragraph>
                     </Card>
                 </Col>
                 <Col span={6}>
@@ -76,18 +169,30 @@ const InvestmentsMetrics = () => {
                             style={{ fontSize: "32px", color: "#fa8c16" }}
                         />
                         <Title level={4}>Ganancias Totales</Title>
-                        <Paragraph>$10,500</Paragraph>
+                        <Paragraph
+                            style={{
+                                color:
+                                    totalCurrentAmount / totalInvestedAmount > 0
+                                        ? "green"
+                                        : "red",
+                            }}
+                        >
+                            ${" "}
+                            {(totalCurrentAmount - totalInvestedAmount)
+                                .toFixed(2)
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        </Paragraph>
                     </Card>
                 </Col>
             </Row>
             <Row gutter={16} style={{ marginTop: "20px" }}>
                 <Col span={12}>
                     <Card title="Composicion de la cartera">
-                        <PieChart width={400} height={300}>
+                        <PieChart width={600} height={300}>
                             <Pie
                                 data={pieData}
-                                innerRadius={60}
-                                outerRadius={100}
+                                innerRadius={50}
+                                outerRadius={80}
                                 fill="#8884d8"
                                 dataKey="value"
                                 label={(entry) =>
