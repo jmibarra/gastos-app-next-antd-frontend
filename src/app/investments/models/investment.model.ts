@@ -3,6 +3,7 @@ export interface IInvestment {
     name: string;
     ticker: string;
     averagePurchasePrice?: number;
+    currentPrice?: number;
     quantity?: number;
     type: string;
     owner?: string;

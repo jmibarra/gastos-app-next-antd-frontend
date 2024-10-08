@@ -15,7 +15,6 @@ import { IInvestment } from "../../app/investments/models";
 import {
     createInvestment,
     deleteInvestmentById,
-    getInvestmentInfoFromYahoo,
     updateInvestmentById,
 } from "../../app/investments/services";
 
@@ -229,6 +228,24 @@ const InvestmentsTable = (params: {
                 <>
                     ${" "}
                     {record.averagePurchasePrice ??
+                        0 * (record.quantity ? record.quantity : 0)}
+                </>
+            ),
+        },
+        {
+            title: "Precio actual",
+            dataIndex: "currentPrice",
+            editable: true,
+            render: (value) => <>$ {value}</>,
+        },
+        {
+            title: "Capitalización actual",
+            dataIndex: "",
+            editable: true,
+            render: (_, record: IInvestment) => (
+                <>
+                    ${" "}
+                    {record.currentPrice ??
                         0 * (record.quantity ? record.quantity : 0)}
                 </>
             ),
