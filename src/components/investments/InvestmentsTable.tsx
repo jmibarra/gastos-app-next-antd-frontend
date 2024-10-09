@@ -9,6 +9,7 @@ import {
     deleteInvestmentById,
     updateInvestmentById,
 } from "../../app/investments/services";
+import { InvestmentUtils } from "./utils/investmentsUtils";
 
 const { Option } = Select;
 
@@ -223,10 +224,7 @@ const InvestmentsTable = (params: {
             render: (_, record: IInvestment) => (
                 <>
                     ${" "}
-                    {(
-                        (record.averagePurchasePrice ?? 0) *
-                        (record.quantity ? record.quantity : 0)
-                    )
+                    {InvestmentUtils.calculateInvestmentTotalInvestment(record)
                         .toFixed(2)
                         .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                 </>
@@ -247,14 +245,33 @@ const InvestmentsTable = (params: {
             render: (_, record: IInvestment) => (
                 <>
                     ${" "}
-                    {(
-                        (record.currentPrice ?? 0) *
-                        (record.quantity ? record.quantity : 0)
-                    )
+                    {InvestmentUtils.calculateInvestmentCurrentValue(record)
                         .toFixed(2)
                         .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                 </>
             ),
+        },
+        {
+            title: "Ganancia",
+            dataIndex: "",
+            render: (_, record: IInvestment) => (
+                <span
+                    style={{
+                        color:
+                            InvestmentUtils.calculateInvestmentEarningPorcentage(
+                                record
+                            ) < 0
+                                ? "red"
+                                : "green",
+                    }}
+                >
+                    {InvestmentUtils.calculateInvestmentEarningPorcentage(
+                        record
+                    ).toFixed(2)}{" "}
+                    %
+                </span>
+            ),
+            editable: false,
         },
         {
             title: "Tipo de instrumento",
