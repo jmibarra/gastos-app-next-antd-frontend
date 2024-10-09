@@ -2,8 +2,7 @@ import React, { useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
-import type { GetRef } from "antd";
-import { Button, Form, Popconfirm, Table } from "antd";
+import { Button, Popconfirm, Table } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
 
 import { IInvestment } from "../../app/investments/models";
