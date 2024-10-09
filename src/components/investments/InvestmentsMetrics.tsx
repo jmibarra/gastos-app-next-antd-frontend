@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Row, Col, Card } from "antd";
+import { Typography, Row, Col, Card, Statistic } from "antd";
 import {
     BarChartOutlined,
     DollarOutlined,
@@ -110,40 +110,38 @@ const InvestmentsMetrics = (params: { investments: IInvestment[] }) => {
             <Row gutter={16} style={{ marginTop: "20px" }}>
                 <Col span={6}>
                     <Card>
-                        <DollarOutlined
-                            style={{ fontSize: "32px", color: "#3f8600" }}
-                        />
-                        <Title level={4}>Monto invertido</Title>
-                        <Paragraph>
-                            ${" "}
-                            {totalInvestedAmount
-                                .toFixed(2)
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                        </Paragraph>
+                        <Statistic
+                            title="Valor actual"
+                            value={totalCurrentAmount}
+                            suffix="$"
+                            precision={2}
+                            prefix={<RiseOutlined />}
+                            valueStyle={{ color: "#1890ff" }}
+                        ></Statistic>
                     </Card>
                 </Col>
                 <Col span={6}>
                     <Card>
-                        <RiseOutlined
-                            style={{ fontSize: "32px", color: "#3f8600" }}
-                        />
-                        <Title level={4}>Valor actual</Title>
-                        <Paragraph>
-                            ${" "}
-                            {totalCurrentAmount
-                                .toFixed(2)
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                        </Paragraph>
+                        <Statistic
+                            title="Total invertido"
+                            value={totalInvestedAmount}
+                            suffix="$"
+                            precision={2}
+                            prefix={<DollarOutlined />}
+                        ></Statistic>
                     </Card>
                 </Col>
                 <Col span={6}>
                     <Card>
-                        <LineChartOutlined
-                            style={{ fontSize: "32px", color: "#1890ff" }}
-                        />
-                        <Title level={4}>Rendimiento</Title>
-                        <Paragraph
-                            style={{
+                        <Statistic
+                            title="Rendimiento"
+                            value={
+                                (totalCurrentAmount / totalInvestedAmount) *
+                                    100 -
+                                100
+                            }
+                            precision={2}
+                            valueStyle={{
                                 color:
                                     (totalCurrentAmount / totalInvestedAmount) *
                                         100 -
@@ -152,36 +150,26 @@ const InvestmentsMetrics = (params: { investments: IInvestment[] }) => {
                                         ? "green"
                                         : "red",
                             }}
-                        >
-                            {" "}
-                            {(
-                                (totalCurrentAmount / totalInvestedAmount) *
-                                    100 -
-                                100
-                            ).toFixed(2)}{" "}
-                            %
-                        </Paragraph>
+                            prefix={<LineChartOutlined />}
+                            suffix="%"
+                        />
                     </Card>
                 </Col>
                 <Col span={6}>
                     <Card>
-                        <BarChartOutlined
-                            style={{ fontSize: "32px", color: "#fa8c16" }}
-                        />
-                        <Title level={4}>Ganancias Totales</Title>
-                        <Paragraph
-                            style={{
+                        <Statistic
+                            title="Ganancias totales"
+                            value={totalCurrentAmount - totalInvestedAmount}
+                            precision={2}
+                            valueStyle={{
                                 color:
-                                    totalCurrentAmount / totalInvestedAmount > 0
+                                    totalCurrentAmount - totalInvestedAmount > 0
                                         ? "green"
                                         : "red",
                             }}
-                        >
-                            ${" "}
-                            {(totalCurrentAmount - totalInvestedAmount)
-                                .toFixed(2)
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                        </Paragraph>
+                            prefix={<BarChartOutlined />}
+                            suffix="$"
+                        />
                     </Card>
                 </Col>
             </Row>
