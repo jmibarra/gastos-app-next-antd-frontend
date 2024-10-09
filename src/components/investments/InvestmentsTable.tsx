@@ -212,7 +212,9 @@ const InvestmentsTable = (params: {
             dataIndex: "averagePurchasePrice",
             width: "15%",
             editable: true,
-            render: (value) => <>$ {value}</>,
+            render: (value) => (
+                <>$ {value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}</>
+            ),
         },
         {
             title: "Total invertido",
@@ -221,8 +223,12 @@ const InvestmentsTable = (params: {
             render: (_, record: IInvestment) => (
                 <>
                     ${" "}
-                    {record.averagePurchasePrice ??
-                        0 * (record.quantity ? record.quantity : 0)}
+                    {(
+                        (record.averagePurchasePrice ?? 0) *
+                        (record.quantity ? record.quantity : 0)
+                    )
+                        .toFixed(2)
+                        .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                 </>
             ),
         },
@@ -230,7 +236,9 @@ const InvestmentsTable = (params: {
             title: "Precio actual",
             dataIndex: "currentPrice",
             editable: true,
-            render: (value) => <>$ {value}</>,
+            render: (value) => (
+                <>$ {value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}</>
+            ),
         },
         {
             title: "Capitalización actual",
@@ -239,8 +247,12 @@ const InvestmentsTable = (params: {
             render: (_, record: IInvestment) => (
                 <>
                     ${" "}
-                    {record.currentPrice ??
-                        0 * (record.quantity ? record.quantity : 0)}
+                    {(
+                        (record.currentPrice ?? 0) *
+                        (record.quantity ? record.quantity : 0)
+                    )
+                        .toFixed(2)
+                        .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                 </>
             ),
         },
