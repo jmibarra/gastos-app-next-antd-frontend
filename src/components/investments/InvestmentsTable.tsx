@@ -1,174 +1,19 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
+
+import { v4 as uuidv4 } from "uuid";
+
 import type { GetRef } from "antd";
-import dayjs from "dayjs";
-import { Button, Form, Input, Popconfirm, Select, Table } from "antd";
+import { Button, Form, Popconfirm, Table } from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
+
 import { IInvestment } from "../../app/investments/models";
+import { InvestmentUtils } from "../../app/investments/utils/investmentsUtils";
+import { InvestmentType } from "../../app/investments/enums/investmentTypes";
 import {
     createInvestment,
     deleteInvestmentById,
-    updateInvestmentById,
 } from "../../app/investments/services";
-import { InvestmentUtils } from "./utils/investmentsUtils";
-
-const { Option } = Select;
-
-type InputRef = GetRef<typeof Input>;
-type SelectRef = GetRef<typeof Select>;
-type FormInstance<T> = GetRef<typeof Form<T>>;
-
-const EditableContext = React.createContext<FormInstance<any> | null>(null);
-
-interface EditableRowProps {
-    index: number;
-}
-
-const dateFormat = "DD/MM/YYYY";
-
-const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
-    const [form] = Form.useForm();
-    return (
-        <Form form={form} component={false}>
-            <EditableContext.Provider value={form}>
-                <tr {...props} />
-            </EditableContext.Provider>
-        </Form>
-    );
-};
-
-interface EditableCellProps {
-    title: React.ReactNode;
-    editable: boolean;
-    children: React.ReactNode;
-    dataIndex: keyof IInvestment;
-    record: IInvestment;
-    handleSave: (record: IInvestment) => void;
-    authToken: string;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
-    title,
-    editable,
-    children,
-    dataIndex,
-    record,
-    handleSave,
-    authToken,
-    ...restProps
-}) => {
-    const [editing, setEditing] = useState(false);
-    const inputRef = useRef<InputRef>(null);
-    const selectRef = useRef<SelectRef>(null);
-    const form = useContext(EditableContext)!;
-
-    useEffect(() => {
-        if (editing) {
-            if (title === "Tipo de inversión") {
-                selectRef.current?.focus();
-            } else {
-                inputRef.current?.focus();
-            }
-        }
-    }, [editing]);
-
-    const toggleEdit = () => {
-        setEditing(!editing);
-        form.setFieldsValue({ [dataIndex]: record[dataIndex] });
-    };
-
-    const save = async () => {
-        try {
-            const values = await form.validateFields();
-
-            toggleEdit();
-
-            if (values.date) {
-                values.date = dayjs(values.date).startOf("day").toDate();
-            }
-
-            const newValue = { ...record, ...values };
-
-            const response = updateInvestmentById(
-                newValue._id,
-                newValue,
-                authToken
-            );
-
-            response.then((updatedRecord: IInvestment) => {
-                handleSave(updatedRecord);
-            });
-        } catch (errInfo) {
-            console.log("Save failed:", errInfo);
-        }
-    };
-
-    let childNode = children;
-
-    if (
-        editable &&
-        (dataIndex === "name" ||
-            dataIndex === "averagePurchasePrice" ||
-            dataIndex === "quantity" ||
-            dataIndex === "ticker" ||
-            dataIndex === "currentPrice")
-    ) {
-        childNode = editing ? (
-            <Form.Item
-                style={{ margin: 0 }}
-                name={dataIndex}
-                rules={[
-                    {
-                        required: true,
-                        message: `${title} is required.`,
-                    },
-                ]}
-            >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
-    }
-
-    if (editable && dataIndex == "type") {
-        childNode = editing ? (
-            <Form.Item
-                name="type"
-                rules={[
-                    {
-                        required: true,
-                        message: "Por favor seleccione un tipo de instrumento.",
-                    },
-                ]}
-            >
-                <Select ref={selectRef} onBlur={save}>
-                    <Option value="CEDEARS">CEDEARS</Option>
-                    <Option value="Obligación Negociable">
-                        Obligación Negociable
-                    </Option>
-                    <Option value="Bonos">Bonos</Option>
-                    <Option value="Efectivo">Efectivo</Option>
-                </Select>
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        );
-    }
-
-    return <td {...restProps}>{childNode}</td>;
-};
+import { EditableCell, EditableRow } from "./EditableCell";
 
 type EditableTableProps = Parameters<typeof Table<IInvestment>>[0];
 
@@ -294,26 +139,31 @@ const InvestmentsTable = (params: {
         },
     ];
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         setCreateButtonLoading(true);
         const newData: IInvestment = {
-            _id: "1",
+            _id: uuidv4(),
             ticker: "-",
             name: `Nueva inversión`,
             averagePurchasePrice: 0,
             currentPrice: 0,
             quantity: 1,
-            type: "CEDEAR",
+            type: InvestmentType.CEDEAR,
         };
 
-        updateInvestments([...investments, newData]); // PRovisorio
+        updateInvestments([...investments, newData]);
 
-        const response = createInvestment(newData, authToken);
-
-        response.then((data) => {
-            updateInvestments([...investments, data]);
+        try {
+            const createdInvestment = await createInvestment(
+                newData,
+                authToken
+            );
+            updateInvestments([...investments, createdInvestment]);
+        } catch (error) {
+            console.error("Error creating investment:", error);
+        } finally {
             setCreateButtonLoading(false);
-        });
+        }
     };
 
     const handleSave = (row: IInvestment) => {
