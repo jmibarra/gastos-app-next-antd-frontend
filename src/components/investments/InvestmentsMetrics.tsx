@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Row, Col, Card, Statistic } from "antd";
+import { Row, Col, Card, Statistic } from "antd";
 import {
     BarChartOutlined,
     DollarOutlined,
@@ -20,8 +20,6 @@ import {
     Label,
 } from "recharts";
 import { IInvestment } from "@/app/investments/models";
-
-const { Title, Paragraph } = Typography;
 
 const COLORS = ["#0088FE", "#FFBB28", "#FF8042", "#3f8600"];
 
