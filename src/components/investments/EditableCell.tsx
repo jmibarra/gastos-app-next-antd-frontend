@@ -6,6 +6,7 @@ import { Button, Form, Input, Popconfirm, Select, Table } from "antd";
 
 import dayjs from "dayjs";
 import { updateInvestmentById } from "@/app/investments/services";
+import { InvestmentType } from "@/app/investments/enums/investmentTypes";
 
 const { Option } = Select;
 
@@ -128,12 +129,12 @@ export const EditableCell: React.FC<EditableCellProps> = ({
                 ]}
             >
                 <Select ref={selectRef} onBlur={save}>
-                    <Option value="CEDEARS">CEDEARS</Option>
-                    <Option value="Obligación Negociable">
+                    <Option value={InvestmentType.CEDEAR}>CEDEARS</Option>
+                    <Option value={InvestmentType.OBLIGATION}>
                         Obligación Negociable
                     </Option>
-                    <Option value="Bonos">Bonos</Option>
-                    <Option value="Efectivo">Efectivo</Option>
+                    <Option value={InvestmentType.BOND}>Bonos</Option>
+                    <Option value={InvestmentType.CASH}>Efectivo</Option>
                 </Select>
             </Form.Item>
         ) : (
