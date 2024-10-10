@@ -1,27 +1,44 @@
-import { IInvestment } from "@/app/investments/models";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import type { GetRef } from "antd";
-import { Form, Input, Select, Spin } from "antd";
 import dayjs from "dayjs";
-import { updateInvestmentById } from "@/app/investments/services";
-import { InvestmentType } from "@/app/investments/enums/investmentTypes";
+import { Form, Input, Select, DatePicker, Table, Spin } from "antd";
+import { ISaving } from "@/app/period/[period]/models";
+import { updateSavingById } from "@/app/period/[period]/services";
+
+interface EditableRowProps {
+    index: number;
+}
 
 const { Option } = Select;
 
+type InputRef = GetRef<typeof Input>;
+type SelectRef = GetRef<typeof Select>;
+type DateRef = GetRef<typeof DatePicker>;
 type FormInstance<T> = GetRef<typeof Form<T>>;
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
-type InputRef = GetRef<typeof Input>;
-type SelectRef = GetRef<typeof Select>;
+export const EditableRow: React.FC<EditableRowProps> = ({
+    index,
+    ...props
+}) => {
+    const [form] = Form.useForm();
+    return (
+        <Form form={form} component={false}>
+            <EditableContext.Provider value={form}>
+                <tr {...props} />
+            </EditableContext.Provider>
+        </Form>
+    );
+};
 
 interface EditableCellProps {
     title: React.ReactNode;
     editable: boolean;
     children: React.ReactNode;
-    dataIndex: keyof IInvestment;
-    record: IInvestment;
-    handleSave: (record: IInvestment) => void;
+    dataIndex: keyof ISaving;
+    record: ISaving;
+    handleSave: (record: ISaving) => void;
     authToken: string;
 }
 
@@ -37,15 +54,18 @@ export const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
-    
+
     const inputRef = useRef<InputRef>(null);
     const selectRef = useRef<SelectRef>(null);
+    const dateRef = useRef<DateRef>(null);
     const form = useContext(EditableContext)!;
 
     useEffect(() => {
         if (editing) {
-            if (title === "Tipo de inversión") {
+            if (title === "Estado") {
                 selectRef.current?.focus();
+            } else if (title === "Fecha de movimiento") {
+                dateRef.current?.focus();
             } else {
                 inputRef.current?.focus();
             }
@@ -62,7 +82,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
             const values = await form.validateFields();
 
             toggleEdit();
-            setLoading(true); // Activa el loading mientras esperamos la respuesta
+            setLoading(true);
 
             if (values.date) {
                 values.date = dayjs(values.date).startOf("day").toDate();
@@ -70,32 +90,25 @@ export const EditableCell: React.FC<EditableCellProps> = ({
 
             const newValue = { ...record, ...values };
 
-            const response = updateInvestmentById(
+            const response = updateSavingById(
                 newValue._id,
                 newValue,
                 authToken
             );
 
-            response.then((updatedRecord: IInvestment) => {
-                setLoading(false); // Desactiva el loading al recibir la respuesta
-                handleSave(updatedRecord); // Actualiza el registro en la tabla
+            response.then((updatedRecord: ISaving) => {
+                handleSave(updatedRecord);
+                setLoading(false);
             });
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
-            setLoading(false); // Desactiva el loading si hay error
+            setLoading(false);
         }
     };
 
     let childNode = children;
 
-    if (
-        editable &&
-        (dataIndex === "name" ||
-            dataIndex === "averagePurchasePrice" ||
-            dataIndex === "quantity" ||
-            dataIndex === "ticker" ||
-            dataIndex === "currentPrice")
-    ) {
+    if (editable && (title === "Descripción" || title === "Monto")) {
         childNode = editing ? (
             <Form.Item
                 style={{ margin: 0 }}
@@ -112,7 +125,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         ) : (
             <div
                 className="editable-cell-value-wrap"
-                style={{ paddingRight: 24, opacity: loading ? 0.5 : 1 }}
+                style={{ paddingRight: 24 }}
                 onClick={toggleEdit}
             >
                 {loading ? <Spin size="small" /> : children}{" "}
@@ -120,30 +133,47 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         );
     }
 
-    if (editable && dataIndex == "type") {
+    if (editable && title == "Tipo de operación") {
         childNode = editing ? (
             <Form.Item
                 name="type"
                 rules={[
                     {
                         required: true,
-                        message: "Por favor seleccione un tipo de instrumento.",
+                        message: "Por favor seleccione un tipo de operación.",
                     },
                 ]}
             >
                 <Select ref={selectRef} onBlur={save}>
-                    <Option value={InvestmentType.CEDEAR}>CEDEARS</Option>
-                    <Option value={InvestmentType.OBLIGATION}>
-                        Obligación Negociable
-                    </Option>
-                    <Option value={InvestmentType.BOND}>Bonos</Option>
-                    <Option value={InvestmentType.CASH}>Efectivo</Option>
+                    <Option value="Ingreso">Ingreso</Option>
+                    <Option value="Egreso">Egreso</Option>
                 </Select>
             </Form.Item>
         ) : (
             <div
                 className="editable-cell-value-wrap"
-                style={{ paddingRight: 24, opacity: loading ? 0.5 : 1 }}
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+            >
+                {loading ? <Spin size="small" /> : children}{" "}
+            </div>
+        );
+    }
+
+    if (editable && title == "Fecha de movimiento") {
+        childNode = editing ? (
+            <Form.Item name="date">
+                <Input
+                    ref={inputRef}
+                    type="date"
+                    onPressEnter={save}
+                    onBlur={save}
+                />
+            </Form.Item>
+        ) : (
+            <div
+                className="editable-cell-value-wrap"
+                style={{ paddingRight: 24 }}
                 onClick={toggleEdit}
             >
                 {loading ? <Spin size="small" /> : children}{" "}
@@ -152,22 +182,4 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     }
 
     return <td {...restProps}>{childNode}</td>;
-};
-
-interface EditableRowProps {
-    index: number;
-}
-
-export const EditableRow: React.FC<EditableRowProps> = ({
-    index,
-    ...props
-}) => {
-    const [form] = Form.useForm();
-    return (
-        <Form form={form} component={false}>
-            <EditableContext.Provider value={form}>
-                <tr {...props} />
-            </EditableContext.Provider>
-        </Form>
-    );
 };
