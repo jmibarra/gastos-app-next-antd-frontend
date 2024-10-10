@@ -111,11 +111,10 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         ) : (
             <div
                 className="editable-cell-value-wrap"
-                style={{ paddingRight: 24, opacity: loading ? 0.5 : 1 }} // Grisar el texto si está en loading
+                style={{ paddingRight: 24, opacity: loading ? 0.5 : 1 }}
                 onClick={toggleEdit}
             >
                 {loading ? <Spin size="small" /> : children}{" "}
-                {/* Mostrar spinner si está cargando */}
             </div>
         );
     }
@@ -143,11 +142,10 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         ) : (
             <div
                 className="editable-cell-value-wrap"
-                style={{ paddingRight: 24, opacity: loading ? 0.5 : 1 }} // Grisar el texto si está en loading
+                style={{ paddingRight: 24, opacity: loading ? 0.5 : 1 }}
                 onClick={toggleEdit}
             >
                 {loading ? <Spin size="small" /> : children}{" "}
-                {/* Mostrar spinner si está cargando */}
             </div>
         );
     }

@@ -5,7 +5,7 @@ import { Col, Divider, Row, Button } from "antd";
 import { useRouter } from "next/navigation";
 import Authenticated from "@/app/authenticated/page";
 
-const Category = () => {
+const Status = () => {
     const [categories, setCategories] = useState([]);
     const [authToken, setAuthToken] = useState<string>("");
     const router = useRouter();
@@ -38,4 +38,4 @@ const Category = () => {
     );
 };
 
-export default Category;
+export default Status;
