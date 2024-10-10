@@ -174,16 +174,14 @@ const InvestmentsMetrics = (params: { investments: IInvestment[] }) => {
             <Row gutter={16} style={{ marginTop: "20px" }}>
                 <Col span={12}>
                     <Card title="Composicion de la cartera">
-                        <PieChart width={600} height={300}>
+                        <PieChart width={450} height={300}>
                             <Pie
                                 data={pieData}
                                 innerRadius={50}
                                 outerRadius={80}
                                 fill="#8884d8"
                                 dataKey="value"
-                                label={(entry) =>
-                                    entry.name + ": " + entry.value + "%"
-                                }
+                                label={(entry) => entry.value + "%"}
                             >
                                 {pieData.map((entry, index) => (
                                     <Cell

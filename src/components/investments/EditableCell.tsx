@@ -1,9 +1,7 @@
 import { IInvestment } from "@/app/investments/models";
 import React, { useContext, useEffect, useRef, useState } from "react";
-
 import type { GetRef } from "antd";
-import { Button, Form, Input, Popconfirm, Select, Table } from "antd";
-
+import { Form, Input, Select, Spin } from "antd";
 import dayjs from "dayjs";
 import { updateInvestmentById } from "@/app/investments/services";
 import { InvestmentType } from "@/app/investments/enums/investmentTypes";
@@ -38,6 +36,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     ...restProps
 }) => {
     const [editing, setEditing] = useState(false);
+    const [loading, setLoading] = useState(false); // Estado para el loading
     const inputRef = useRef<InputRef>(null);
     const selectRef = useRef<SelectRef>(null);
     const form = useContext(EditableContext)!;
@@ -62,6 +61,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
             const values = await form.validateFields();
 
             toggleEdit();
+            setLoading(true); // Activa el loading mientras esperamos la respuesta
 
             if (values.date) {
                 values.date = dayjs(values.date).startOf("day").toDate();
@@ -76,10 +76,12 @@ export const EditableCell: React.FC<EditableCellProps> = ({
             );
 
             response.then((updatedRecord: IInvestment) => {
-                handleSave(updatedRecord);
+                setLoading(false); // Desactiva el loading al recibir la respuesta
+                handleSave(updatedRecord); // Actualiza el registro en la tabla
             });
         } catch (errInfo) {
             console.log("Save failed:", errInfo);
+            setLoading(false); // Desactiva el loading si hay error
         }
     };
 
@@ -109,10 +111,11 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         ) : (
             <div
                 className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
+                style={{ paddingRight: 24, opacity: loading ? 0.5 : 1 }} // Grisar el texto si está en loading
                 onClick={toggleEdit}
             >
-                {children}
+                {loading ? <Spin size="small" /> : children}{" "}
+                {/* Mostrar spinner si está cargando */}
             </div>
         );
     }
@@ -140,10 +143,11 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         ) : (
             <div
                 className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
+                style={{ paddingRight: 24, opacity: loading ? 0.5 : 1 }} // Grisar el texto si está en loading
                 onClick={toggleEdit}
             >
-                {children}
+                {loading ? <Spin size="small" /> : children}{" "}
+                {/* Mostrar spinner si está cargando */}
             </div>
         );
     }
