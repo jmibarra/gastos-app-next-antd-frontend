@@ -100,6 +100,10 @@ const InvestmentsMetrics = (params: { investments: IInvestment[] }) => {
         ];
     };
 
+    const formatter = (value: number) => {
+        return `${value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} $`;
+    };
+
     // Luego puedes usar la función dentro de tu componente
     const barData = getBarData(groupedInvestments);
 
@@ -200,7 +204,7 @@ const InvestmentsMetrics = (params: { investments: IInvestment[] }) => {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="registro" />
                             <YAxis />
-                            <Tooltip />
+                            <Tooltip formatter={formatter} />
                             <Legend />
                             <Bar dataKey="CEDEARS" fill={"#cf1322"} />
                             <Bar
