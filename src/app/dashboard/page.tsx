@@ -13,10 +13,7 @@ import {
     Tooltip,
     LineChart,
     Line,
-    PieChart,
-    Pie,
-    Cell,
-    Legend,
+    ResponsiveContainer,
 } from "recharts";
 import {
     DollarOutlined,
@@ -43,14 +40,6 @@ const lineData = [
     { month: "Nov", ganancias: 2900 },
     { month: "Dic", ganancias: 4000 },
 ];
-
-const pieData = [
-    { name: "Acciones", value: 50 },
-    { name: "Bonos", value: 30 },
-    { name: "Efectivo", value: 20 },
-];
-
-const COLORS = ["#0088FE", "#FFBB28", "#FF8042"]; // Colores para el gráfico de torta
 
 const DashboardPage = () => {
     const router = useRouter();
@@ -187,44 +176,17 @@ const DashboardPage = () => {
                 </Row>
                 <Row gutter={24} style={{ marginTop: "20px" }}>
                     {/* Gráfico de barras */}
-                    <Col span={12}>
+                    <Col span={24}>
                         <Card title="Ahorros por mes">
-                            <BarChart
-                                width={400}
-                                height={300}
-                                data={savingsData}
-                            >
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="month" />
-                                <YAxis />
-                                <Tooltip />
-                                <Bar dataKey="savings" fill="#8884d8" />
-                            </BarChart>
-                        </Card>
-                    </Col>
-                    {/* Gráfico de torta */}
-                    <Col span={12}>
-                        <Card title="Composicion de la cartera de ahorros">
-                            <PieChart width={400} height={300}>
-                                <Pie
-                                    data={pieData}
-                                    cx={200}
-                                    cy={150}
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    fill="#8884d8"
-                                    dataKey="value"
-                                    label
-                                >
-                                    {pieData.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={COLORS[index % COLORS.length]}
-                                        />
-                                    ))}
-                                </Pie>
-                                <Legend />
-                            </PieChart>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <BarChart data={savingsData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="month" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Bar dataKey="savings" fill="#8884d8" />
+                                </BarChart>
+                            </ResponsiveContainer>
                         </Card>
                     </Col>
                 </Row>

@@ -14,6 +14,7 @@ import {
     XAxis,
     YAxis,
     Tooltip,
+    ResponsiveContainer,
 } from "recharts";
 import {
     MinusCircleOutlined,
@@ -178,44 +179,55 @@ const MonthMetricsBoards = (params: {
             >
                 <Col span={12}>
                     <Card title="Ingresos Gastos Ahorros">
-                        <BarChart width={500} height={300} data={barData}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="registro" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey="Gastos" fill={"#cf1322"} />
-                            <Bar dataKey="Ingresos" fill={"#3f8600"} />
-                            <Bar dataKey="Ahorros" fill={"#0088FE"} />
-                        </BarChart>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart
+                                style={{
+                                    marginLeft: "auto",
+                                    marginRight: "auto",
+                                }}
+                                data={barData}
+                            >
+                                <CartesianGrid />
+                                <XAxis dataKey="registro" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="Gastos" fill={"#cf1322"} />
+                                <Bar dataKey="Ingresos" fill={"#3f8600"} />
+                                <Bar dataKey="Ahorros" fill={"#0088FE"} />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </Card>
                 </Col>
                 <Col span={12}>
                     <Card title="Categorias de gastos">
-                        <PieChart
-                            width={500}
-                            height={300}
-                            style={{ marginLeft: "auto", marginRight: "auto" }}
-                        >
-                            <Pie
-                                data={pieData}
-                                cx={250}
-                                cy={115}
-                                outerRadius={120}
-                                dataKey="value"
-                                labelLine={false}
-                                label={renderCustomizedLabel}
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart
+                                style={{
+                                    marginLeft: "auto",
+                                    marginRight: "auto",
+                                }}
                             >
-                                {pieData.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={entry.color}
-                                        name={entry.name}
-                                    />
-                                ))}
-                            </Pie>
-                            <Legend />
-                        </PieChart>
+                                <Pie
+                                    data={pieData}
+                                    cx={250}
+                                    cy={115}
+                                    outerRadius={120}
+                                    dataKey="value"
+                                    labelLine={false}
+                                    label={renderCustomizedLabel}
+                                >
+                                    {pieData.map((entry, index) => (
+                                        <Cell
+                                            key={`cell-${index}`}
+                                            fill={entry.color}
+                                            name={entry.name}
+                                        />
+                                    ))}
+                                </Pie>
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
                     </Card>
                 </Col>
             </Row>

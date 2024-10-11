@@ -18,6 +18,7 @@ import {
     Tooltip,
     Bar,
     Label,
+    ResponsiveContainer,
 } from "recharts";
 import { IInvestment } from "@/app/investments/models";
 
@@ -178,42 +179,46 @@ const InvestmentsMetrics = (params: { investments: IInvestment[] }) => {
             <Row gutter={16} style={{ marginTop: "20px" }}>
                 <Col span={12}>
                     <Card title="Composicion de la cartera">
-                        <PieChart width={450} height={300}>
-                            <Pie
-                                data={pieData}
-                                innerRadius={50}
-                                outerRadius={80}
-                                fill="#8884d8"
-                                dataKey="value"
-                                label={(entry) => entry.value + "%"}
-                            >
-                                {pieData.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={COLORS[index % COLORS.length]}
-                                    />
-                                ))}
-                            </Pie>
-                            <Legend />
-                        </PieChart>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <Pie
+                                    data={pieData}
+                                    innerRadius={50}
+                                    outerRadius={80}
+                                    fill="#8884d8"
+                                    dataKey="value"
+                                    label={(entry) => entry.value + "%"}
+                                >
+                                    {pieData.map((entry, index) => (
+                                        <Cell
+                                            key={`cell-${index}`}
+                                            fill={COLORS[index % COLORS.length]}
+                                        />
+                                    ))}
+                                </Pie>
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
                     </Card>
                 </Col>
                 <Col span={12}>
                     <Card title="Total por instrumento">
-                        <BarChart width={500} height={300} data={barData}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="registro" />
-                            <YAxis />
-                            <Tooltip formatter={formatter} />
-                            <Legend />
-                            <Bar dataKey="CEDEARS" fill={"#cf1322"} />
-                            <Bar
-                                dataKey="Obligaciones Negociables"
-                                fill={"#3f8600"}
-                            />
-                            <Bar dataKey="Bonos" fill={"#0088FE"} />
-                            <Bar dataKey="Efectivo" fill={"#fa8c16"} />
-                        </BarChart>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={barData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="registro" />
+                                <YAxis />
+                                <Tooltip formatter={formatter} />
+                                <Legend />
+                                <Bar dataKey="CEDEARS" fill={"#cf1322"} />
+                                <Bar
+                                    dataKey="Obligaciones Negociables"
+                                    fill={"#3f8600"}
+                                />
+                                <Bar dataKey="Bonos" fill={"#0088FE"} />
+                                <Bar dataKey="Efectivo" fill={"#fa8c16"} />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </Card>
                 </Col>
             </Row>
