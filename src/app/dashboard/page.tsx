@@ -83,8 +83,8 @@ const DashboardPage = () => {
                 "Nov",
                 "Dic",
             ];
-            const initialData = monthNames.reduce((acc, month, index) => {
-                const periodKey = `${month}`;
+            const initialData: { [key: string]: { month: string; savings: number } } = monthNames.reduce((acc: { [key: string]: { month: string; savings: number } }, month, index) => {
+                const periodKey: string = `${month}`;
                 acc[periodKey] = { month: periodKey, savings: 0 }; // Iniciar cada mes con 0 ahorros
                 return acc;
             }, {});
@@ -116,7 +116,7 @@ const DashboardPage = () => {
             // Convertir el objeto agrupado en un array ordenado para el gráfico
             const formattedData = Object.values(groupedData);
 
-            setSavingsData(formattedData);
+            setSavingsData(formattedData as any);
         } catch (error) {
             console.error("Error al traer los ahorros:", error);
         }

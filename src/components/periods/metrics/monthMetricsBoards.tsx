@@ -74,6 +74,18 @@ const MonthMetricsBoards = (params: {
 
     const pieData = getCategoryPieData();
 
+    // Define tu propia interfaz basada en las propiedades que esperas
+    interface CustomLabelProps {
+        cx: number;
+        cy: number;
+        midAngle: number;
+        innerRadius: number;
+        outerRadius: number;
+        percent: number;
+        index: number;
+        // Agrega cualquier otra propiedad que recibas y uses aquí
+    }
+
     const RADIAN = Math.PI / 180;
     const renderCustomizedLabel = ({
         cx,
@@ -83,7 +95,7 @@ const MonthMetricsBoards = (params: {
         outerRadius,
         percent,
         index,
-    }) => {
+    }: CustomLabelProps) => { // <--- Usas tu tipo personalizado
         const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
         const x = cx + radius * Math.cos(-midAngle * RADIAN);
         const y = cy + radius * Math.sin(-midAngle * RADIAN);
