@@ -51,12 +51,20 @@ const FAQs = () => {
                                 Asegúrate de haber iniciado sesión.
                             </p>
                         </Panel>
-                        <Panel header="¿Cómo contacto con el soporte?" key="4">
+                        <Panel header="¿Cómo me contacto con el soporte?" key="4">
+                            {/* CAMBIO REALIZADO AQUÍ */}
                             <p>
                                 Puedes ponerte en contacto con nuestro equipo de
-                                soporte a través de la página de "Contacto" o
-                                enviando un correo electrónico a
-                                soporte@ejemplo.com.
+                                soporte creando un nuevo issue en nuestro
+                                repositorio de GitHub. Accede a través de este
+                                enlace:{" "}
+                                <a
+                                    href="https://github.com/jmibarra/gastos-app-next-antd-frontend/issues"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Crear un Issue en GitHub
+                                </a>
                             </p>
                         </Panel>
                     </Collapse>
